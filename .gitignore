@@ -43,3 +43,25 @@ Desktop.ini
 # ── Gemini / Antigravity (ferramenta de IA) ───────────────────
 .gemini/
 .agents/
+
+# ── Artigos de referência (copyright — listados em REFERENCIAS.txt) ─
+template/Artigos_referencia_TESE/*.pdf
+template/Artigos_referencia_TESE/*.epub
+template/Artigos_referencia_TESE/*.djvu
+!template/Artigos_referencia_TESE/REFERENCIAS.txt
+
+# ── Build LaTeX ───────────────────────────────────────────────
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+# Nota: ficheiros .pdf gerados pelo LaTeX NÃO são ignorados — versionamos
+# o PDF final da tese quando aplicável.

@@ -1,0 +1,136 @@
+{
+  "projects": [
+    {
+      "project": "simples_stdlib",
+      "num_nodes": 9,
+      "num_edges": 9,
+      "density": 0.125,
+      "pairs": [
+        {
+          "comparison": "PageRank vs HITS-auth",
+          "spearman_rho": 0.6528,
+          "kendall_tau_b": 0.4854,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs HITS-hub",
+          "spearman_rho": -0.1492,
+          "kendall_tau_b": -0.0347,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs SALSA-auth",
+          "spearman_rho": 0.8393,
+          "kendall_tau_b": 0.75,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs SALSA-hub",
+          "spearman_rho": -0.1769,
+          "kendall_tau_b": -0.1581,
+          "top1_match": false
+        },
+        {
+          "comparison": "HITS-auth vs SALSA-auth",
+          "spearman_rho": 0.6,
+          "kendall_tau_b": 0.5547,
+          "top1_match": false
+        },
+        {
+          "comparison": "HITS-hub vs SALSA-hub",
+          "spearman_rho": 0.7589,
+          "kendall_tau_b": 0.7016,
+          "top1_match": false
+        }
+      ]
+    },
+    {
+      "project": "medio_flask",
+      "num_nodes": 7,
+      "num_edges": 11,
+      "density": 0.2619,
+      "pairs": [
+        {
+          "comparison": "PageRank vs HITS-auth",
+          "spearman_rho": 0.5984,
+          "kendall_tau_b": 0.527,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs HITS-hub",
+          "spearman_rho": 0.0826,
+          "kendall_tau_b": 0.0,
+          "top1_match": true
+        },
+        {
+          "comparison": "PageRank vs SALSA-auth",
+          "spearman_rho": 0.6179,
+          "kendall_tau_b": 0.5477,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs SALSA-hub",
+          "spearman_rho": 0.309,
+          "kendall_tau_b": 0.2739,
+          "top1_match": false
+        },
+        {
+          "comparison": "HITS-auth vs SALSA-auth",
+          "spearman_rho": 0.6355,
+          "kendall_tau_b": 0.5774,
+          "top1_match": false
+        },
+        {
+          "comparison": "HITS-hub vs SALSA-hub",
+          "spearman_rho": 0.6236,
+          "kendall_tau_b": 0.562,
+          "top1_match": false
+        }
+      ]
+    },
+    {
+      "project": "complexo_sklearn",
+      "num_nodes": 8,
+      "num_edges": 17,
+      "density": 0.3036,
+      "pairs": [
+        {
+          "comparison": "PageRank vs HITS-auth",
+          "spearman_rho": 0.3899,
+          "kendall_tau_b": 0.3266,
+          "top1_match": true
+        },
+        {
+          "comparison": "PageRank vs HITS-hub",
+          "spearman_rho": 0.236,
+          "kendall_tau_b": 0.24,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs SALSA-auth",
+          "spearman_rho": 0.5916,
+          "kendall_tau_b": 0.5292,
+          "top1_match": false
+        },
+        {
+          "comparison": "PageRank vs SALSA-hub",
+          "spearman_rho": 0.2535,
+          "kendall_tau_b": 0.2268,
+          "top1_match": false
+        },
+        {
+          "comparison": "HITS-auth vs SALSA-auth",
+          "spearman_rho": 0.5953,
+          "kendall_tau_b": 0.5401,
+          "top1_match": false
+        },
+        {
+          "comparison": "HITS-hub vs SALSA-hub",
+          "spearman_rho": 0.5879,
+          "kendall_tau_b": 0.5292,
+          "top1_match": false
+        }
+      ]
+    }
+  ]
+}

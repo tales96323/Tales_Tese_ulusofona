@@ -1,0 +1,41 @@
+\chapter*{Resumo}
+\addcontentsline{toc}{chapter}{Resumo}
+
+A priorização de requisitos de software é uma das atividades mais
+sensíveis da Engenharia de Requisitos: técnicas tradicionais como a
+\textbf{Votação Acumulativa} e o \textbf{PERT/CPM} --- descritas em
+detalhe no Capítulo~\ref{ch:fundamentos} --- dependem fortemente da
+perceção subjetiva dos \textit{stakeholders} e tendem a tornar-se
+inconsistentes em sistemas com elevado número de requisitos
+interdependentes \parencite{karlsson2002, silva2018}. Esta dissertação
+investiga uma alternativa de natureza estrutural, assente na aplicação
+de algoritmos de ranqueamento de grafos --- PageRank, HITS e SALSA ---
+ao grafo de dependências entre requisitos.
+
+Foi desenvolvido o \textbf{ReqGraph}, um protótipo \emph{open source}
+em Python que automatiza o \textit{pipeline}
+\emph{Código-fonte \(\rightarrow\) AST \(\rightarrow\) Call Graph
+\(\rightarrow\) Grafo de Requisitos}, e o módulo \code{ranker.py}, que
+aplica os três algoritmos ao grafo extraído. A validação foi conduzida
+sobre três projetos reais de código aberto --- \emph{CPython stdlib},
+\emph{Flask} e \emph{scikit-learn} --- selecionados por
+representarem regimes crescentes de acoplamento arquitetural. A
+comparação entre os rankings produzidos pelos três algoritmos é feita
+de forma quantitativa, recorrendo aos coeficientes de
+\textbf{correlação de Spearman} (\(\rho\)) e \textbf{Kendall}
+(\(\tau_b\)). Os resultados mostram que, em grafos com densidade
+suficiente, os algoritmos partilham parcialmente a identificação dos
+requisitos mais centrais; em grafos esparsos, divergem de forma
+informativa, oferecendo perspetivas complementares de importância
+--- transitiva (PageRank), direta (HITS \emph{authority}) e de
+orquestração (HITS \emph{hub}). Conclui-se que o ranqueamento estrutural
+constitui um complemento robusto às técnicas tradicionais, contribuindo
+para a redução --- não a eliminação --- do viés subjetivo na priorização
+de requisitos. Discutem-se em detalhe as limitações da abordagem,
+nomeadamente a subjetividade residual do mapeamento
+\code{func\_to\_req} e a dimensão reduzida do corpus.
+
+\vspace{0.3cm}
+\noindent\textbf{Palavras-chave:} Engenharia de Requisitos; Priorização
+Estrutural; Análise Estática de Código; Grafos; PageRank; HITS; SALSA;
+Correlação de Spearman.

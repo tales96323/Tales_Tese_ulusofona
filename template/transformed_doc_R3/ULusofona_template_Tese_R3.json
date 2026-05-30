@@ -1,0 +1,326 @@
+[
+  {
+    "sid": "/agradecimentos",
+    "title": "Agradecimentos",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/",
+    "title": "",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/resumo",
+    "title": "Resumo",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/abstract",
+    "title": "Abstract",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/-1",
+    "title": "",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/tabela-de-conteúdos",
+    "title": "Tabela de Conteúdos",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/índice-de-figuras",
+    "title": "Índice de Figuras",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/índice-de-tabelas",
+    "title": "Índice de Tabelas",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/abreviaturas",
+    "title": "Abreviaturas",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/introdução",
+    "title": "Introdução",
+    "level": 1,
+    "children": [
+      {
+        "sid": "/enquadramento-e-motivação",
+        "title": "Enquadramento e Motivação",
+        "level": 2,
+        "parent": "/introdução",
+        "children": []
+      },
+      {
+        "sid": "/problema-e-objetivos",
+        "title": "Problema e Objetivos",
+        "level": 2,
+        "parent": "/introdução",
+        "children": []
+      },
+      {
+        "sid": "/objetivos",
+        "title": "Objetivos",
+        "level": 2,
+        "parent": "/introdução",
+        "children": [
+          {
+            "sid": "/objetivos-gerais",
+            "title": "Objetivos Gerais",
+            "level": 3,
+            "parent": "/objetivos",
+            "children": []
+          },
+          {
+            "sid": "/objetivos-especificos",
+            "title": "Objetivos Especificos",
+            "level": 3,
+            "parent": "/objetivos",
+            "children": []
+          }
+        ]
+      },
+      {
+        "sid": "/abordagem-metodologica",
+        "title": "Abordagem Metodologica",
+        "level": 2,
+        "parent": "/introdução",
+        "children": [
+          {
+            "sid": "/levantamento-e-sistematização-teórica",
+            "title": "Levantamento e Sistematização Teórica",
+            "level": 3,
+            "parent": "/abordagem-metodologica",
+            "children": []
+          },
+          {
+            "sid": "/ambiente-de-experimentação-e-ferramentas",
+            "title": "Ambiente de Experimentação e Ferramentas",
+            "level": 3,
+            "parent": "/abordagem-metodologica",
+            "children": []
+          },
+          {
+            "sid": "/emulação-e-modelagem-do-grafo-de-requisitos",
+            "title": "Emulação e Modelagem do Grafo de Requisitos",
+            "level": 3,
+            "parent": "/abordagem-metodologica",
+            "children": []
+          },
+          {
+            "sid": "/protocolo-de-avaliação-e-análise",
+            "title": "Protocolo de Avaliação e Análise",
+            "level": 3,
+            "parent": "/abordagem-metodologica",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sid": "/referencial-teórico",
+    "title": "Referencial Teórico",
+    "level": 1,
+    "children": [
+      {
+        "sid": "/conceitos-básicos-de-grafos",
+        "title": "Conceitos básicos de Grafos",
+        "level": 2,
+        "parent": "/referencial-teórico",
+        "children": [
+          {
+            "sid": "/tipos-de-grafos",
+            "title": "Tipos de Grafos",
+            "level": 3,
+            "parent": "/conceitos-básicos-de-grafos",
+            "children": []
+          },
+          {
+            "sid": "/caminhos-e-passeios-aleatórios",
+            "title": "Caminhos e passeios aleatórios",
+            "level": 3,
+            "parent": "/conceitos-básicos-de-grafos",
+            "children": []
+          }
+        ]
+      },
+      {
+        "sid": "/algoritmos-de-ranqueamento-em-grafos",
+        "title": "Algoritmos de ranqueamento em grafos",
+        "level": 2,
+        "parent": "/referencial-teórico",
+        "children": [
+          {
+            "sid": "/centralidade-de-grau",
+            "title": "Centralidade de grau",
+            "level": 3,
+            "parent": "/algoritmos-de-ranqueamento-em-grafos",
+            "children": []
+          },
+          {
+            "sid": "/pagerank",
+            "title": "PageRank",
+            "level": 3,
+            "parent": "/algoritmos-de-ranqueamento-em-grafos",
+            "children": []
+          },
+          {
+            "sid": "/hits-hyperlink-induced-topic-search",
+            "title": "HITS (Hyperlink-Induced Topic Search)",
+            "level": 3,
+            "parent": "/algoritmos-de-ranqueamento-em-grafos",
+            "children": []
+          },
+          {
+            "sid": "/salsa-stochastic-approach-for-link-structure-analysis",
+            "title": "SALSA (Stochastic Approach for Link-Structure Analysis)",
+            "level": 3,
+            "parent": "/algoritmos-de-ranqueamento-em-grafos",
+            "children": []
+          },
+          {
+            "sid": "/birank-e-normalizações-simétricas",
+            "title": "BiRank e normalizações simétricas",
+            "level": 3,
+            "parent": "/algoritmos-de-ranqueamento-em-grafos",
+            "children": []
+          }
+        ]
+      },
+      {
+        "sid": "/aplicação-das-métricas-ao-ranking-e-priorização-de-requisitos",
+        "title": "Aplicação das Métricas ao Ranking e Priorização de Requisitos",
+        "level": 2,
+        "parent": "/referencial-teórico",
+        "children": [
+          {
+            "sid": "/fundamentos-da-priorização-de-requisitos-e-desafios",
+            "title": "Fundamentos da priorização de requisitos e desafios",
+            "level": 3,
+            "parent": "/aplicação-das-métricas-ao-ranking-e-priorização-de-requisitos",
+            "children": []
+          },
+          {
+            "sid": "/construção-do-grafo-de-requisitos",
+            "title": "Construção do grafo de requisitos",
+            "level": 3,
+            "parent": "/aplicação-das-métricas-ao-ranking-e-priorização-de-requisitos",
+            "children": []
+          },
+          {
+            "sid": "/mapeamento-dos-algoritmos-de-ranqueamento-para-priorização",
+            "title": "Mapeamento dos algoritmos de ranqueamento para priorização",
+            "level": 3,
+            "parent": "/aplicação-das-métricas-ao-ranking-e-priorização-de-requisitos",
+            "children": []
+          },
+          {
+            "sid": "/benefícios-limitações-e-considerações-práticas",
+            "title": "Benefícios, limitações e considerações práticas",
+            "level": 3,
+            "parent": "/aplicação-das-métricas-ao-ranking-e-priorização-de-requisitos",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sid": "/metodologia",
+    "title": "Metodologia",
+    "level": 1,
+    "children": [
+      {
+        "sid": "/recomendações-para-escrita",
+        "title": "Recomendações para Escrita",
+        "level": 2,
+        "parent": "/metodologia",
+        "children": [
+          {
+            "sid": "/utilização-de-ms-word",
+            "title": "Utilização de MS Word",
+            "level": 3,
+            "parent": "/recomendações-para-escrita",
+            "children": []
+          },
+          {
+            "sid": "/princípios-básicos-de-formatação",
+            "title": "Princípios Básicos de Formatação",
+            "level": 3,
+            "parent": "/recomendações-para-escrita",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sid": "/avaliação-de-resultados",
+    "title": "Avaliação de Resultados",
+    "level": 1,
+    "children": [
+      {
+        "sid": "/resultados-técnicos",
+        "title": "Resultados Técnicos",
+        "level": 2,
+        "parent": "/avaliação-de-resultados",
+        "children": []
+      },
+      {
+        "sid": "/resultados-analíticos",
+        "title": "Resultados Analíticos",
+        "level": 2,
+        "parent": "/avaliação-de-resultados",
+        "children": []
+      }
+    ]
+  },
+  {
+    "sid": "/conclusão",
+    "title": "Conclusão",
+    "level": 1,
+    "children": [
+      {
+        "sid": "/sumário-e-principais-contribuições",
+        "title": "Sumário e Principais Contribuições",
+        "level": 2,
+        "parent": "/conclusão",
+        "children": []
+      },
+      {
+        "sid": "/trabalho-futuro",
+        "title": "Trabalho Futuro",
+        "level": 2,
+        "parent": "/conclusão",
+        "children": []
+      }
+    ]
+  },
+  {
+    "sid": "/bibliografia",
+    "title": "Bibliografia",
+    "level": 1,
+    "children": []
+  },
+  {
+    "sid": "/glossário",
+    "title": "Glossário",
+    "level": 1,
+    "children": []
+  }
+]

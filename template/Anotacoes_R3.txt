@@ -1,0 +1,82 @@
+Anotações Professora TESE
+
+RESUMO
+
+1 - Os métodos estão descritos a frente? Refiro-me a Votação Acumulativa e PERT/CPM
+2 - Evitar detalhes técnicos no Abstract.
+3 - Retirar a parte de cobrindo grafos de 9 a 17 arestas.
+4 - O que significa "converger" em (os algoritmos convergem em casos suficientemente densos)
+5 - O que significa "suficientemente densos"
+
+1.1 - Enquadramento e Motivação
+
+1 - Deve falar do algoritmo que propõe SALSA p/ o twitter não deve falar em Engenharia Reversa.
+2 - Incluir mais referencias nessa parte.
+
+1.2 - Problema e Objetivos (apagar a palavra "Objetivos")
+
+1 - qual o termo usado na literatura? Ranqueamento ou Priorização?
+2 - Nessa parte deve ter uma definição do problema de ranquealemtno de requisitos.
+3 - O segundo paragrafo deve estar no Capitulo 2.
+
+1.3 - Objetivos
+
+1 - primeira frase está muito idêntica ao inicio do 1.2 e com o mesmo problema.
+2 - A parte de unificação e ligação de processos esticasticos (segunda frase) deve unificar a primeira frase do 1.3.1.
+3 - em Formalizar a aplicação de processos estocásticos e prioridades de grafos deve estar "abordagens de teoria dos grafos"
+4 - Foi feito a Analise de Vulnerabilidades Topológicas? Foi feito Desenvolvimento de MOdelo Hibrido? Por que isso foi citado?
+
+1.4 - Abordagem metodológica
+
+1 - É melhor remover deste capitulo e reaproveitar o texto para introduriz método no capitulo 3.
+2 - talvez incluir seção com contribuições e adicioinar a seção com estrutura do documento.
+3 - Deve incluir os links de repositórios usados. 
+4 - A execução não foi feita em google Colab. Foi feito localmente com o Python, Networkx e AST. 
+
+CAPITULO DOIS - COLOCAR COMO Conceitos teóricos e contextualização do problema
+
+2.1.1 Tipos de Grafos.
+1 - Tirar a sitação "estrutura dos verticies" e colocar com a natureza das arestas e verticies.
+2 - No exemplo de Grafos direcionados, retirar a frase "estudar a propagação de ideias ao longo do tempo".
+
+2.2 Algoritmos de ranqueamento em grafos.
+1 - Faltam referencias para os métodos e métricas abordadas na secção 2.2
+2 - deve reforçar que está considerando métricas para redes direcionadas
+3 - Na descrição do r quando se lÊ: " onde r é o vetor de ranks, M é a matriz de transição estocástica e e é o vetos de personalização (geralmente uniforme) o que signigica ser uniforme?
+4 - antes de falar de convergência é importante falar que isso é um processo iterativo.
+
+2.2.4 - SALSA (Stochastic Approach for Link-Structure Analysis)
+1 - Reescrever e explicar melhor o que é o SALSA
+2 - Explicar o efeito de comunidades muito coesas
+
+2.2.5 - BiRank e normaliações simétricas
+1 - Não é claro o que os termos "normalização estocástica" e "normalização simétrica da matriz de pesos" significam.
+
+3.3.2 - Page Rank
+1 - O que significa "por redistribuição uniforme"
+
+4 - Resultados
+1 - É bom refereir já as limitações antes de apontar no trabalhos futuros.
+
+4.1.3 - Caso Intermediário
+
+1 - O que significa as cores entre os nós do texto?
+
+4.2.1 Caso simples
+1 - O que significa os valores entre parênteses na tabela.
+2 - o QUe significa "33% da massa de probabilidade)"
+
+5.1 - Sumário e Principais Contribuições 
+1 - Na parte de Demonstração da viabilidade da rastreabilidade automática: Atenção a validação foi feita sobre a qualidade dos resultados
+2 - Na parte de Comparação empírica entre PageRank, HITS e SALSA:  diferenciar de densidade não são substanciais para se tirar estas conclusões dos grafos tem densidades idênticas
+
+5.2 - Trabalho Futuro
+1 - Retirar Analise empírica do Efeito TKC e Algoritmos adicionais. 
+
+*ANOTACOES DE REUNIAO*
+Objetivo - Nao usar subsecoes sobre ele. Deixar um texto Inteiro
+Motivacao - Deixar o termo de "engenharia reversa" fora.
+Abordagem metodologica - Retirar ele e colocar parte do texto que existe na metodologia. Ele vai servir de introducao a metodologia.
+Referencial Teorico - Falar sobre o artigo que me inspirei e dar um paralelo sobre esse artigo. Dizendo que o artigo nao tinha e esse foi uma evolucao.
+Validacao de Resulados - Nao podemos fazer uma, mas posso referer o artigo que fez a validacao com profissionais e posso sitar como trabalho futuro por limitacao de recurso.
+Trocar Layout de Figuras - Pegar as arestas todas e usar outra ferramenta para a visualizacao. GEPHG https://lite.gephi.org/v1.0.2/ CSV Formato especifico @Source e Targuet@

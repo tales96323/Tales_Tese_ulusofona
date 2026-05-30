@@ -1,0 +1,196 @@
+% ============================================================================
+%  lusofona.sty — Estilo visual aproximado do template oficial da
+%  Universidade Lusófona (Mestrado em Engenharia Informática e Sistemas de
+%  Informação). Concebido para o documento "ULusofona_template_Tese" R5.
+%
+%  Pretende ser compilável com pdflatex, xelatex ou lualatex. Recomenda-se
+%  xelatex/lualatex (fontes do sistema + suporte Unicode nativo).
+% ============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lusofona}[2026/05/30 v1.0 Lusófona Thesis Style]
+
+% --- Margens (próximas das do template Word: 3 cm esq./sup., 2,5 cm restantes)
+\RequirePackage[a4paper,
+    left=3cm, right=2.5cm,
+    top=3cm, bottom=2.5cm,
+    headheight=15pt]{geometry}
+
+% --- Idioma e codificação --------------------------------------------------
+\RequirePackage[main=portuguese,english]{babel}
+\RequirePackage{csquotes}
+
+% --- Tipografia ------------------------------------------------------------
+\RequirePackage{microtype}
+% Carrega fontes do sistema só se xelatex/lualatex; caso contrário, fallback Latin Modern.
+\RequirePackage{iftex}
+\ifPDFTeX
+    \RequirePackage[T1]{fontenc}
+    \RequirePackage[utf8]{inputenc}
+    \RequirePackage{lmodern}
+\else
+    \RequirePackage{fontspec}
+    \setmainfont{TeX Gyre Termes}        % equivalente livre a Times New Roman
+    \setsansfont{TeX Gyre Heros}         % equivalente a Helvetica/Arial
+    \setmonofont{TeX Gyre Cursor}        % monoespaçada
+\fi
+
+% --- Espaçamento e parágrafo (regra Lusófona: 1.5 entrelinhas, parágrafo com indent)
+\RequirePackage{setspace}
+\onehalfspacing
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{1.25em}
+
+% --- Cabeçalhos de capítulo (sóbrios, sans-serif, cor preta) ----------------
+\RequirePackage{titlesec}
+\titleformat{\chapter}[display]
+    {\normalfont\sffamily\Huge\bfseries}
+    {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat*{\section}{\normalfont\sffamily\Large\bfseries}
+\titleformat*{\subsection}{\normalfont\sffamily\large\bfseries}
+\titleformat*{\subsubsection}{\normalfont\sffamily\normalsize\bfseries}
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+
+% --- Cabeçalho e rodapé ----------------------------------------------------
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{\nouppercase{\sffamily\small\leftmark}}
+\fancyhead[R]{\sffamily\small\thepage}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \fancyfoot[C]{\sffamily\small\thepage}
+}
+
+% --- Listas e tabelas ------------------------------------------------------
+\RequirePackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt}
+\RequirePackage{booktabs}
+\RequirePackage{array}
+\RequirePackage{tabularx}
+\RequirePackage{longtable}
+\RequirePackage{multirow}
+\RequirePackage{makecell}
+
+% --- Cores, figuras, hiperligações -----------------------------------------
+\RequirePackage[table,dvipsnames]{xcolor}
+\definecolor{LusofonaBlue}{HTML}{003366}     % azul institucional aproximado
+\definecolor{LusofonaAccent}{HTML}{B22222}   % acento (capa)
+\definecolor{CodeBg}{HTML}{F7F7F7}
+\definecolor{NoteBg}{HTML}{EEF2F7}
+
+\RequirePackage{graphicx}
+\graphicspath{{figures/}{../../}{../}{./}}
+\RequirePackage{caption}
+\captionsetup{font=small, labelfont=bf, labelsep=endash}
+\RequirePackage{subcaption}
+
+\RequirePackage[hidelinks,
+    colorlinks=true,
+    linkcolor=LusofonaBlue,
+    citecolor=LusofonaBlue,
+    urlcolor=LusofonaBlue]{hyperref}
+\RequirePackage[noabbrev,portuguese]{cleveref}
+
+% --- Matemática ------------------------------------------------------------
+\RequirePackage{amsmath, amssymb, amsthm, mathtools}
+\RequirePackage{bm}
+
+% --- Listings (código e JSON) ----------------------------------------------
+\RequirePackage{listings}
+\lstdefinelanguage{json}{
+    morestring=[b]",
+    morecomment=[l]{//},
+    sensitive=true,
+    showstringspaces=false,
+    literate=
+       *{0}{{{\color{blue!60!black}0}}}{1}
+        {1}{{{\color{blue!60!black}1}}}{1}
+        {2}{{{\color{blue!60!black}2}}}{1}
+        {3}{{{\color{blue!60!black}3}}}{1}
+        {4}{{{\color{blue!60!black}4}}}{1}
+        {5}{{{\color{blue!60!black}5}}}{1}
+        {6}{{{\color{blue!60!black}6}}}{1}
+        {7}{{{\color{blue!60!black}7}}}{1}
+        {8}{{{\color{blue!60!black}8}}}{1}
+        {9}{{{\color{blue!60!black}9}}}{1}
+        {:}{{{\color{red!60!black}{:}}}}{1}
+        {,}{{{\color{red!60!black}{,}}}}{1}
+        {\{}{{{\color{black}{\{}}}}{1}
+        {\}}{{{\color{black}{\}}}}}{1}
+        {[}{{{\color{black}{[}}}}{1}
+        {]}{{{\color{black}{]}}}}{1},
+}
+\lstdefinestyle{thesisCode}{
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{CodeBg},
+    frame=single,
+    rulecolor=\color{black!20},
+    keywordstyle=\color{LusofonaBlue}\bfseries,
+    stringstyle=\color{red!60!black},
+    commentstyle=\color{black!60}\itshape,
+    showstringspaces=false,
+    breaklines=true,
+    numbers=none,
+    columns=fullflexible,
+    captionpos=b,
+}
+\lstset{style=thesisCode}
+
+% --- Bibliografia ----------------------------------------------------------
+%  Usa biblatex em estilo APA por defeito (compatível com biber).
+%  Caso a Lusófona prefira numérico, comutar para "numeric-comp".
+\RequirePackage[backend=biber,
+    style=apa,
+    sorting=nyt,
+    natbib=true,
+    uniquename=false,
+    uniquelist=false]{biblatex}
+
+% --- Caixas para notas e boxes (e.g. ameaças à validade) -------------------
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{notebox}[1][]{
+    enhanced, breakable,
+    colback=NoteBg, colframe=LusofonaBlue!70,
+    fonttitle=\sffamily\bfseries,
+    title=#1,
+    boxrule=0.6pt, arc=2pt,
+}
+
+% --- Comandos auxiliares ---------------------------------------------------
+\newcommand{\thesistitle}{Uma perspectiva de engenharia sobre a evolução de algoritmos de ranqueamento baseada em grafos}
+\newcommand{\thesissubtitle}{Comparação empírica de PageRank, HITS e SALSA sobre grafos de requisitos extraídos por análise estática}
+\newcommand{\thesisauthor}{Tales Santos}
+\newcommand{\thesisadvisor}{Aleksandar Mikovic}
+\newcommand{\thesiscoadvisor}{Sofia Fernandes}
+\newcommand{\thesisdegree}{Mestrado em Engenharia Informática e Sistemas de Informação}
+\newcommand{\thesisuniversity}{Universidade Lusófona}
+\newcommand{\thesisdept}{Departamento de Engenharia Informática e Sistemas de Informação (DEISI)}
+\newcommand{\thesisplace}{Lisboa}
+\newcommand{\thesisdate}{Setembro de 2026}
+\newcommand{\thesisrevision}{R5}
+
+% Pequenos atalhos semânticos
+\newcommand{\req}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\eg}{e.g.\@\xspace}
+\newcommand{\ie}{i.e.\@\xspace}
+\RequirePackage{xspace}
+
+% --- Marca de revisão (rodapé discreto) ------------------------------------
+\newcommand{\printRevisionMark}{%
+    \AddToShipoutPictureBG*{%
+        \begin{tikzpicture}[remember picture, overlay]
+            \node[anchor=south east, xshift=-1cm, yshift=0.6cm,
+                  font=\sffamily\tiny\color{black!40}]
+                 at (current page.south east)
+                 {Revisão \thesisrevision\ — \today};
+        \end{tikzpicture}}
+}
+\RequirePackage{tikz}
+\RequirePackage[contents={}]{background}
+
+\endinput

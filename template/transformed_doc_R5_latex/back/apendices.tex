@@ -1,0 +1,92 @@
+\chapter{Apêndice ou Anexo?}
+\label{ap:diferenca}
+
+O Apêndice~\ref{ap:diferenca} explica a diferença entre apêndice e
+anexo, conforme as convenções do \emph{template} oficial da
+\thesisuniversity.
+
+\paragraph{Apêndice.} Apêndices englobam materiais elaborados pelo
+autor(a), tais como gráficos, quadros, tabelas, traduções,
+organogramas e esquemas que prestem informação relevante para a
+compreensão do trabalho. Só devem figurar nos apêndices as
+informações previamente referenciadas no texto. As informações são
+total ou parcialmente da responsabilidade do autor.
+
+\paragraph{Anexo.} Anexos englobam documentos que, não sendo
+elaborados pelo autor, serviram de base para a construção do estudo
+ou facilitam a compreensão da tese/dissertação. Só devem figurar
+nos anexos documentos e/ou materiais previamente referenciados no
+corpo do trabalho. Todos os documentos devem estar em formato
+digital.
+
+% ============================================================================
+\chapter{Cálculo de Spearman e Kendall em Python puro}
+\label{ap:correlation-code}
+
+Este apêndice apresenta a implementação completa do \emph{script}
+\code{compute\_rank\_correlations.py} (Capítulo~\ref{ch:metodologia},
+Secção~\ref{sec:metricas}), em Python puro e sem dependência de
+\code{scipy}. O \emph{script} consome os ficheiros
+\code{ranking\_results.json} produzidos pelo \code{ranker.py} e
+gera o ficheiro consolidado \code{rank\_correlations.json},
+utilizado para popular a Tabela~\ref{tab:correlacoes}.
+
+\begin{lstlisting}[language=Python, caption={Implementação de Spearman $\rho$ e Kendall $\tau_b$ em Python puro (excerto).},label={lst:rank-code},basicstyle=\ttfamily\scriptsize]
+def mean_ranks(scores):
+    """Converte scores em ranks com mean-rank para ties."""
+    indexed = sorted(enumerate(scores), key=lambda x: -x[1])
+    ranks = [0.0] * len(scores)
+    i = 0
+    while i < len(indexed):
+        j = i
+        while j + 1 < len(indexed) and indexed[j+1][1] == indexed[i][1]:
+            j += 1
+        avg = (i + 1 + j + 1) / 2.0
+        for k in range(i, j + 1):
+            ranks[indexed[k][0]] = avg
+        i = j + 1
+    return ranks
+
+def spearman_rho(a, b):
+    return pearson(mean_ranks(a), mean_ranks(b))
+
+def kendall_tau_b(a, b):
+    """Kendall tau-b com correcao para empates (Goodman, 1954)."""
+    n = len(a); C = D = Ta = Tb = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            da, db = a[i] - a[j], b[i] - b[j]
+            if   da == 0 and db == 0: Ta += 1; Tb += 1
+            elif da == 0:             Ta += 1
+            elif db == 0:             Tb += 1
+            elif (da > 0) == (db > 0): C += 1
+            else:                      D += 1
+    P0 = n * (n - 1) / 2
+    den = ((P0 - Ta) * (P0 - Tb)) ** 0.5
+    return (C - D) / den if den else float('nan')
+\end{lstlisting}
+
+A versão completa, incluindo o carregamento dos ficheiros JSON e a
+escrita do resultado consolidado, encontra-se em
+\code{compute\_rank\_correlations.py} na raiz do repositório
+público.
+
+% ============================================================================
+\chapter{Mapeamentos \code{func\_to\_req} dos três casos de estudo}
+\label{ap:mapeamentos}
+
+Os mapeamentos \code{func\_to\_req} utilizados em cada caso de
+estudo encontram-se em:
+
+\begin{itemize}
+    \item CPython \emph{stdlib}: \code{testes/simples\_stdlib/mapeamento.py}
+    \item Flask: \code{testes/medio\_flask/mapeamento.py}
+    \item \emph{scikit-learn}: \code{testes/complexo\_sklearn/mapeamento.py}
+\end{itemize}
+
+Os ficheiros são distribuídos como parte do repositório público
+mencionado em Capítulo~\ref{ch:introducao},
+Secção~\ref{sec:contribuicoes}. Cada ficheiro contém um único
+dicionário Python \code{FUNC\_TO\_REQ} cujas chaves são nomes
+qualificados de funções/métodos e cujos valores são identificadores
+de requisitos no formato \texttt{REQ\_*}.

@@ -1,0 +1,166 @@
+═══════════════════════════════════════════════════════════════════════
+ REFERÊNCIAS BIBLIOGRÁFICAS — PASTA "Artigos_referencia_TESE/"
+═══════════════════════════════════════════════════════════════════════
+
+Esta pasta contém a coleção de artigos, livros e materiais de referência
+utilizados na elaboração da Tese de Mestrado:
+
+  "Uma perspectiva de engenharia sobre a evolução de algoritmos de
+   ranqueamento baseada em grafos"
+
+  Autor:    Tales Santos
+  Mestrado: Engenharia Informática e Sistemas de Informação (DEISI)
+  Curso:    Universidade Lusófona (Lisboa)
+  Versão:   R5 (Maio de 2026)
+
+═══════════════════════════════════════════════════════════════════════
+ NOTA DE COPYRIGHT
+═══════════════════════════════════════════════════════════════════════
+
+Os PDFs originais foram propositadamente EXCLUÍDOS do repositório
+público do GitHub por respeito ao copyright dos autores e editoras.
+Este ficheiro lista apenas os títulos, autores e (quando disponível)
+o DOI / referência para que os interessados possam aceder às fontes
+oficiais.
+
+═══════════════════════════════════════════════════════════════════════
+ LISTA DE REFERÊNCIAS (37 ficheiros)
+═══════════════════════════════════════════════════════════════════════
+
+# Engenharia de Requisitos — Priorização e Rastreabilidade
+────────────────────────────────────────────────────────────────────────
+  1. Ahl, V. (2005). An experimental comparison of five prioritization
+     methods. Master's Thesis, Blekinge Institute of Technology.
+
+  2. An experimental comparison of five prioritization methods (duplicate
+     of #1 with different filename).
+
+  3. Gotel, O. & Finkelstein, A. (1994). An analysis of the requirements
+     traceability problem. Proceedings of the First International
+     Conference on Requirements Engineering, IEEE.
+
+  4. Firesmith, D. (2004). Prioritizing Requirements. Journal of Object
+     Technology, 3(8), 35–48.
+
+  5. Karlsson, J. (2002). Software Requirements Prioritizing. Proceedings
+     of the Second International Conference on Requirements Engineering,
+     IEEE.
+
+  6. Karlsson, L., Berander, P., & Ågren, J. Pair-wise Comparisons versus
+     Planning Game Partitioning: Experiments on Requirements Prioritisation
+     Techniques. Empirical Software Engineering, 12(1).
+
+  7. Leffingwell, D. & Widrig, D. (2003). Managing Software Requirements:
+     A Use Case Approach. Addison Wesley.
+
+  8. Sommerville, I. (2007). Engenharia de Software (8ª ed.). Pearson.
+
+  9. Silva, M.P., Tirelo, F. & Marques Neto, H.T. (2018). Uso do Algoritmo
+     PageRank para Priorização de Requisitos de Software. CBSoft. [2 cópias]
+
+ 10. Wiegers, K. & Beatty, J. First Things First — Prioritizing Requirements.
+
+# Algoritmos de Ranqueamento de Grafos
+────────────────────────────────────────────────────────────────────────
+ 11. Brin, S. & Page, L. (1998). The anatomy of a large-scale hypertextual
+     web search engine. Computer Networks and ISDN Systems, 30(1–7).
+     [Inclui também documento "Artigos.pdf" — agrupamento de artigos
+      seminais sobre PageRank]
+
+ 12. Page, L., Brin, S., Motwani, R. & Winograd, T. (1999). The PageRank
+     Citation Ranking: Bringing Order to the Web. Stanford InfoLab.
+
+ 13. Kleinberg, J.M. (1999). Authoritative Sources in a Hyperlinked
+     Environment. Journal of the ACM, 46(5), 604–632.
+
+ 14. Lempel, R. & Moran, S. (2001). SALSA: The Stochastic Approach for
+     Link-Structure Analysis. ACM Transactions on Information Systems,
+     19(2), 131–160.
+
+ 15. Lempel, R. & Moran, S. Improved Link-Based Algorithms for Ranking
+     Web Pages.
+
+ 16. Ng, A.Y., Zheng, A.X. & Jordan, M.I. (2001). Stable Algorithms for
+     Link Analysis. Proceedings of the ACM SIGIR Conference.
+
+ 17. Ding, C. et al. (2002). PageRank, HITS and a Unified Framework for
+     Link Analysis. Proceedings of the 25th ACM SIGIR Conference.
+
+ 18. Wang, X. et al. An Improved PageRank Algorithm Based on Text
+     Similarity.
+
+ 19. Jin, Y., Li, T. & Liu, S. (2009). Applying PageRank Algorithm in
+     Requirement Concern Impact Analysis. 33rd Annual IEEE COMPSAC.
+
+ 20. He, X., Gao, M., Kan, M.-Y. & Wang, D. (2014). BiRank: Towards
+     Ranking on Bipartite Graphs. IEEE TKDE, 26(11), 2673–2687. [2 cópias]
+
+ 21. He, X., Chen, T., Kan, M.-Y. & Chen, X. (2015). TriRank: Review-aware
+     Explainable Recommendation by Modeling Aspects. ACM CIKM.
+
+ 22. Zhou, D. et al. (2004). Learning with Local and Global Consistency.
+     NeurIPS / NIPS.
+
+# Teoria de Grafos e Redes Complexas
+────────────────────────────────────────────────────────────────────────
+ 23. Szwarcfiter, J.L. (2018). Teoria Computacional de Grafos. Elsevier.
+
+ 24. Newman, M.E.J. — Redes Complexas: conceitos e aplicações.
+
+ 25. Análise Topológica da Rede Complexa descrita pelo Espaço de Produtos.
+
+ 26. Tensor-based Approaches for Evolving Social Network Analysis.
+
+# Probabilidade, Processos Estocásticos e Random Walks
+────────────────────────────────────────────────────────────────────────
+ 27. Durrett, R. (2010). Probability: Theory and Examples (4th ed.).
+     Cambridge University Press.
+
+ 28. Masuda, N., Porter, M.A. & Lambiotte, R. (2017). Random Walks and
+     Diffusion on Networks. Physics Reports, 716–717, 1–58.
+
+ 29. Processo Estocástico — material de suporte.
+
+ 30. Stochastic Process — material de suporte.
+
+# Metaheurísticas e Otimização
+────────────────────────────────────────────────────────────────────────
+ 31. Lourenço, H.R., Martin, O.C. & Stützle, T. Iterated Local Search.
+     In: Handbook of Metaheuristics. [Ficheiro pesado: ~77 MB]
+
+ 32. Iterated Local Search & Restart.
+
+ 33. Simulated Annealing with Restart Strategy for the Path Cover Problem
+     with Time Windows. [2 cópias com nomes ligeiramente diferentes]
+
+# Gestão de Projeto
+────────────────────────────────────────────────────────────────────────
+ 34. Kerzner, H. Project Management: A Systems Approach to Planning,
+     Scheduling, and Controlling. Wiley.
+
+═══════════════════════════════════════════════════════════════════════
+ COMO OBTER OS PDFs ORIGINAIS
+═══════════════════════════════════════════════════════════════════════
+
+• Artigos académicos: pesquisar no Google Scholar (scholar.google.com)
+  pelo título exato. Quase todos estão disponíveis em PDF nos sites das
+  editoras (ACM, IEEE, Elsevier, Springer) ou em repositórios
+  institucionais (Stanford InfoLab, arXiv).
+
+• Livros (Sommerville, Szwarcfiter, Kerzner, Leffingwell & Widrig):
+  disponíveis em livrarias técnicas, bibliotecas universitárias e
+  plataformas como Pearson, McGraw-Hill, Wiley.
+
+• A biblioteca da Universidade Lusófona disponibiliza acesso institucional
+  a muitas destas fontes através do portal b-on.
+
+═══════════════════════════════════════════════════════════════════════
+ BIBLIOGRAFIA NO CORPO DA TESE
+═══════════════════════════════════════════════════════════════════════
+
+A bibliografia formalmente citada na dissertação está em formato BibTeX
+no ficheiro:
+
+  template/transformed_doc_R5_latex/references.bib
+
+═══════════════════════════════════════════════════════════════════════

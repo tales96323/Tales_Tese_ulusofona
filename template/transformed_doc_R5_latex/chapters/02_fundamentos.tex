@@ -1,0 +1,537 @@
+\chapter{Conceitos Teóricos e Contextualização do Problema}
+\label{ch:fundamentos}
+
+O Capítulo~\ref{ch:fundamentos} introduz os conceitos teóricos sobre
+os quais a dissertação assenta. A Secção~\ref{sec:grafos} revisita
+conceitos basilares de Teoria dos Grafos. A Secção~\ref{sec:algoritmos}
+apresenta os algoritmos de ranqueamento utilizados, sublinhando que
+todas as métricas aqui consideradas são analisadas no contexto de
+\textbf{redes direcionadas}. A Secção~\ref{sec:re} contextualiza o
+problema da priorização de requisitos, posiciona este trabalho em
+relação à literatura existente --- em particular, em relação a
+\citet{silva2018} --- e identifica a contribuição incremental da
+presente dissertação.
+
+\noindent\textbf{Conceitos-chave:} grafos; passeios aleatórios;
+PageRank; HITS; SALSA; priorização de requisitos; rastreabilidade;
+correlação de ranks.
+
+% ---------------------------------------------------------------------------
+\section{Conceitos básicos de Grafos}
+\label{sec:grafos}
+
+Um grafo é uma estrutura matemática que modela relações entre objetos
+\parencite{newman2010, szwarcfiter2018}. Formalmente, um grafo
+$G = (V,E)$ é definido por um conjunto de vértices (ou nós) $V$ e um
+conjunto de arestas $E$, onde cada aresta é um par não ordenado (ou
+ordenado) de vértices. Os vértices representam as entidades de
+interesse, e as arestas representam as relações entre elas. Em redes
+complexas, os termos ``grafo'' e ``rede'' são frequentemente usados
+como sinónimos \parencite{newman2010}.
+
+\paragraph{Exemplo.} Considere uma pequena rede de colaboração entre
+investigadores. Os vértices podem ser $\{A,B,C,D\}$. As arestas
+representam coautorias: se $A$ e $B$ publicaram juntos, existe uma
+aresta entre eles. Suponha as colaborações $A$--$B$, $A$--$C$,
+$B$--$C$, $C$--$D$. O grafo correspondente tem $V = \{A,B,C,D\}$ e
+$E = \{AB,AC,BC,CD\}$.
+
+Uma forma comum de representar um grafo é por meio da \textbf{matriz
+de adjacência} $A$, onde $A_{ij} = 1$ se existe uma aresta entre os
+vértices $i$ e $j$, e $0$ caso contrário \parencite{newman2010}. Para
+o exemplo acima:
+\[
+A = \begin{bmatrix}
+0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 0 & 1 \\
+0 & 0 & 1 & 0
+\end{bmatrix}
+\]
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.45\linewidth]{image2.png}
+    \caption{Grafo exemplo (rede de colaboração entre investigadores).}
+    \label{fig:grafo-exemplo}
+\end{figure}
+
+\subsection{Tipos de Grafos}
+\label{sec:tipos-grafos}
+
+Os grafos podem ser classificados de acordo com a \textbf{natureza
+dos vértices e das arestas} \parencite{szwarcfiter2018}. Os principais
+tipos relevantes para este trabalho são:
+
+\begin{itemize}
+    \item \textbf{Grafos não direcionados:} As arestas não têm
+        orientação, ou seja, a relação é simétrica. No exemplo
+        anterior, a colaboração é mútua e, portanto, o grafo é não
+        direcionado.
+
+    \item \textbf{Grafos direcionados (digrafos):} As arestas possuem
+        uma direção, indicando uma relação assimétrica. Por exemplo,
+        em uma rede de citações, se o artigo $A$ cita o artigo $B$,
+        existe uma aresta de $A$ para $B$, mas não necessariamente o
+        contrário. Formalmente, as arestas são pares ordenados
+        $(u, v)$. A matriz de adjacência, nesse caso, não é simétrica.
+
+    \item \textbf{Grafos ponderados:} As arestas possuem um peso
+        associado, que pode representar intensidade, custo ou
+        distância. Por exemplo, em uma rede de transportes, o peso
+        pode ser a distância entre cidades. A matriz de adjacência
+        armazena os pesos: $A_{ij} = w_{ij}$.
+
+    \item \textbf{Grafos bipartidos:} Os vértices podem ser
+        particionados em dois conjuntos disjuntos $U$ e $V$ de tal
+        forma que todas as arestas conectam um vértice de $U$ a um
+        vértice de $V$. Esse tipo de grafo é natural para modelar
+        relações entre dois tipos distintos de entidades, como
+        autores e artigos \parencite{newman2010}.
+
+    \item \textbf{Grafos bipartidos ponderados:} Combinam as duas
+        características anteriores: são grafos bipartidos cujas
+        arestas possuem pesos. Um exemplo é uma rede de compras em
+        que clientes (conjunto $U$) adquirem produtos (conjunto $V$)
+        com determinada frequência (peso).
+\end{itemize}
+
+As classificações apresentadas seguem a sistematização clássica de
+\citet{szwarcfiter2018} e \citet{newman2010}; a
+Figura~\ref{fig:tipos-grafos} ilustra os cinco tipos discutidos.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[t]{0.18\linewidth}
+        \centering\includegraphics[width=\linewidth]{image3.png}
+        \caption{Não direcionado}
+    \end{subfigure}\hfill
+    \begin{subfigure}[t]{0.18\linewidth}
+        \centering\includegraphics[width=\linewidth]{image4.png}
+        \caption{Direcionado}
+    \end{subfigure}\hfill
+    \begin{subfigure}[t]{0.18\linewidth}
+        \centering\includegraphics[width=\linewidth]{image5.png}
+        \caption{Ponderado}
+    \end{subfigure}\hfill
+    \begin{subfigure}[t]{0.18\linewidth}
+        \centering\includegraphics[width=\linewidth]{image6.png}
+        \caption{Bipartido}
+    \end{subfigure}\hfill
+    \begin{subfigure}[t]{0.18\linewidth}
+        \centering\includegraphics[width=\linewidth]{image7.png}
+        \caption{Bipartido ponderado}
+    \end{subfigure}
+    \caption{Tipos de grafos discutidos na
+    Secção~\ref{sec:tipos-grafos}.}
+    \label{fig:tipos-grafos}
+\end{figure}
+
+\subsection{Caminhos e passeios aleatórios}
+\label{sec:caminhos}
+
+Um caminho em um grafo é uma sequência de vértices
+$v_1, v_2, \ldots, v_k$ tal que cada par consecutivo
+$(v_i, v_{i+1})$ é uma aresta. O comprimento do caminho é o número de
+arestas percorridas \parencite{newman2010}.
+
+Um \textbf{passeio aleatório} (\emph{random walk}) é um processo
+estocástico em que um ``caminhante'' se move ao longo do grafo de
+forma probabilística \parencite{masuda2017, ross2014}. Em tempo
+discreto, partindo de um vértice, o caminhante escolhe aleatoriamente
+uma das arestas incidentes e move-se para o vértice vizinho. Esse
+processo pode ser descrito por uma matriz de transição $P$, onde
+$P_{ij}$ é a probabilidade de ir do vértice $j$ para o vértice $i$.
+Para grafos não direcionados e não ponderados, uma escolha comum é
+$P_{ij} = 1/\text{grau}(j)$ se $i$ e $j$ são vizinhos.
+
+Passeios aleatórios são a base de diversos algoritmos de ranqueamento,
+como o PageRank, que estima a importância de um vértice pela frequência
+com que é visitado em um passeio aleatório de longa duração
+\parencite{page1999, masuda2017}.
+
+% ---------------------------------------------------------------------------
+\section{Algoritmos de ranqueamento em grafos}
+\label{sec:algoritmos}
+
+O ranqueamento de vértices em grafos atribui um \emph{score} a cada
+nó com base na estrutura de conexões. Diferentes algoritmos exploram
+diferentes propriedades --- grau, centralidade de autovetor ou
+passeios aleatórios --- e foram inicialmente propostos no contexto da
+análise de redes de citações, do \emph{ranking} de páginas web e da
+análise de redes sociais \parencite{page1999, kleinberg1999, lempel2001}.
+
+\begin{notebox}[Importante]
+    Todas as métricas descritas nesta secção são analisadas no
+    contexto de \textbf{redes direcionadas}, dado que o grafo de
+    requisitos é, por natureza, direcionado: a aresta
+    $r_a \rightarrow r_b$ codifica a dependência de $r_a$ sobre $r_b$.
+\end{notebox}
+
+\paragraph{Escolha de PageRank, HITS e SALSA face a alternativas.}
+A literatura de \emph{centrality measures} oferece um conjunto vasto
+de alternativas: \emph{eigenvector centrality} \parencite{newman2010},
+\emph{Katz centrality}, \emph{betweenness} e \emph{closeness}, ou
+ainda decomposições $k$-\emph{core}. Esta dissertação restringe a
+análise a PageRank, HITS e SALSA por três razões: (a) Silva et~al.\
+\parencite{silva2018} estabelecem o PageRank como \emph{baseline} no
+domínio --- comparar com algoritmos \emph{de mesma família} mantém o
+estudo \emph{commensurate}; (b) HITS e SALSA introduzem a separação
+\emph{hub}/\emph{authority}, essencial para distinguir requisitos
+\emph{orquestradores} de requisitos \emph{críticos por dependência
+direta}; (c) as três métricas são interpretáveis como passeios
+aleatórios em cadeias de Markov, oferecendo uma fundamentação
+estocástica comum \parencite{ding2002}. A extensão a outras métricas
+(\eg\ \emph{Katz}, $k$-\emph{core}) é discutida como trabalho futuro
+(Secção~\ref{sec:trabalho-futuro}).
+
+\subsection{Centralidade de grau}
+\label{sec:grau}
+
+A centralidade de grau é a métrica mais simples de centralidade em
+grafos \parencite{newman2010}. Para um vértice $v$, o
+\textbf{grau de entrada} (em grafos direcionados) é o número de
+arestas que chegam a ele, e o \textbf{grau de saída} é o número de
+arestas que partem. Formalmente, para um grafo com matriz de
+adjacência $A$, o grau de entrada de $v$ é $\sum_{u} A_{uv}$. Esta
+métrica é a base do SALSA \parencite{lempel2001}, que na sua versão
+básica equivale a uma ponderação dos graus.
+
+\subsection{PageRank}
+\label{sec:pagerank}
+
+O \textbf{PageRank} (PR) foi proposto por \citet{page1999} e estima a
+importância de um vértice como a \textbf{distribuição estacionária}
+de um passeio aleatório em tempo discreto sobre o grafo
+\parencite{brin1998, masuda2017}. A intuição é que um vértice é
+importante se é apontado por outros vértices importantes ---
+definição recursiva resolvida por iteração. O algoritmo incorpora um
+fator de amortecimento $d$ (tipicamente $0{,}85$), que representa a
+probabilidade de o caminhante continuar a seguir as arestas; com
+probabilidade $1 - d$, o caminhante salta para um vértice aleatório
+escolhido segundo uma distribuição de personalização (em geral,
+\textbf{uniforme} --- todos os vértices têm idêntica probabilidade
+$1/n$ de serem escolhidos). A equação fundamental é:
+\begin{equation}
+    \mathbf{r} = d\, M\, \mathbf{r} + (1 - d)\, \mathbf{e}
+    \label{eq:pagerank}
+\end{equation}
+onde $\mathbf{r}$ é o vetor de \emph{ranks}, $M$ é a matriz de
+transição estocástica (cada coluna soma 1) e $\mathbf{e}$ é o vetor
+de personalização (uniforme, $e_i = 1/n$ para todo $i$). A matriz $M$
+é construída a partir da matriz de adjacência: $M_{ij} = 1/\text{out}(j)$
+se há uma aresta de $j$ para $i$, e $0$ caso contrário. Para vértices
+sem arestas de saída (\emph{dead ends}), são feitos ajustes para
+garantir a estocasticidade (Secção~\ref{sec:dangling}).
+
+Trata-se de um \textbf{processo iterativo}: a equação
+$\mathbf{r}^{(t+1)} = d M \mathbf{r}^{(t)} + (1-d)\mathbf{e}$ é
+aplicada repetidamente a partir de uma estimativa inicial
+$\mathbf{r}^{(0)}$. Sob as condições garantidas pelo amortecimento
+(que torna a cadeia de Markov ergódica), a sequência
+$\{\mathbf{r}^{(t)}\}_t$ converge para um único vetor estacionário
+$\mathbf{r}^{*}$ \parencite{brin1998, masuda2017}. Na prática, a
+iteração é interrompida quando
+$\|\mathbf{r}^{(t+1)} - \mathbf{r}^{(t)}\|$ desce abaixo de uma
+tolerância pré-definida.
+
+\paragraph{Ilustração.} Considere o grafo direcionado simples com
+vértices $A, B, C$ e arestas $A \to B$, $A \to C$, $B \to C$,
+$C \to A$. Os graus de saída são $A : 2$, $B : 1$, $C : 1$, donde
+\(
+M =
+\begin{psmallmatrix}
+0 & 0 & 1 \\
+0{,}5 & 0 & 0 \\
+0{,}5 & 1 & 0
+\end{psmallmatrix}
+\)
+(colunas somam $1$). Aplicando o PageRank com $d = 0{,}85$ e
+$\mathbf{e}$ uniforme, obtém-se o vetor de \emph{ranks} após
+convergência (Figura~\ref{fig:pagerank-exemplo}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\linewidth]{image8.png}
+    \caption{Grafo exemplo usado para ilustrar o PageRank.}
+    \label{fig:pagerank-exemplo}
+\end{figure}
+
+\subsection{HITS (\emph{Hyperlink-Induced Topic Search})}
+\label{sec:hits}
+
+O \textbf{HITS}, proposto por \citet{kleinberg1999}, distingue dois
+papéis para os vértices: \textbf{autoridades} (páginas com conteúdo
+relevante) e \textbf{hubs} (páginas que apontam para boas
+autoridades). A ideia é que uma boa autoridade é apontada por muitos
+bons \emph{hubs}, e um bom \emph{hub} aponta para muitas boas
+autoridades. Esta relação de reforço mútuo é expressa, de forma
+iterativa, por:
+\begin{equation}
+    \mathbf{a} = A^{T}\mathbf{h}, \qquad \mathbf{h} = A\mathbf{a}
+    \label{eq:hits}
+\end{equation}
+onde $A$ é a matriz de adjacência (para grafos direcionados). Após
+normalização, os vetores de autoridade $\mathbf{a}$ e \emph{hub}
+$\mathbf{h}$ convergem para os autovetores principais de $A^{T}A$ e
+$AA^{T}$, respetivamente \parencite{kleinberg1999, ng2001}. A
+Figura~\ref{fig:hits-exemplo} ilustra a aplicação ao mesmo grafo
+exemplo.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\linewidth]{image9.png}
+    \caption{Grafo exemplo usado para ilustrar o HITS.}
+    \label{fig:hits-exemplo}
+\end{figure}
+
+\subsection{SALSA (\emph{Stochastic Approach for Link-Structure Analysis})}
+\label{sec:salsa}
+
+O \textbf{SALSA}, proposto por \citet{lempel2001}, combina ideias do
+PageRank e do HITS num enquadramento estocástico. A sua intuição é a
+seguinte: em vez de aplicar HITS diretamente sobre o grafo direcionado
+original, o SALSA constrói \textbf{dois passeios aleatórios em um
+grafo bipartido auxiliar} em que cada vértice do grafo original é
+representado duas vezes --- uma como \emph{hub} e outra como
+\emph{authority}. Os dois passeios alternam entre estes dois lados:
+
+\begin{itemize}
+    \item O passeio das \textbf{autoridades} parte de uma autoridade
+        $v$, segue uma aresta no sentido inverso (até um \emph{hub}
+        $u$ que a aponte) e depois segue uma aresta para a frente
+        (até outra autoridade $w$ apontada por $u$). A distribuição
+        estacionária deste passeio define o \emph{score} de
+        autoridade de cada vértice.
+    \item O passeio dos \textbf{hubs} é simétrico: parte de um
+        \emph{hub}, segue uma aresta para a frente até uma autoridade
+        e regressa, no sentido inverso, a outro \emph{hub}.
+\end{itemize}
+
+Sob normalização local (probabilidades $1/\text{out}(u)$ e
+$1/\text{in}(v)$), em \textbf{grafos não ponderados e fortemente
+conexos} a distribuição estacionária do passeio das autoridades
+reduz-se a $\text{in}(v) / |E|$, ou seja, é diretamente proporcional
+ao grau de entrada do vértice \parencite{lempel2001}. De forma
+análoga, o \emph{score} de \emph{hub} é proporcional ao grau de
+saída. Esta interpretação simples torna o SALSA computacionalmente
+mais leve que o HITS, mas tem uma consequência empírica relevante
+para esta dissertação: em grafos pequenos com graus pouco
+diferenciados, o SALSA pode produzir \emph{distribuições praticamente
+uniformes}, o que se traduz num \emph{ranking achatado}
+(ver Capítulo~\ref{ch:resultados}, Secção~\ref{sec:discussao}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\linewidth]{image10.png}
+    \caption{Grafo exemplo usado para ilustrar o SALSA: os \emph{ranks}
+    são proporcionais aos graus de entrada (\emph{authority}) e de
+    saída (\emph{hub}).}
+    \label{fig:salsa-exemplo}
+\end{figure}
+
+A vantagem teórica do SALSA face ao HITS é a sua resistência ao
+\textbf{Efeito TKC} (\emph{Tightly Knit Community Effect}). Em grafos
+onde existem \textbf{comunidades muito coesas} --- pequenos
+subconjuntos de vértices densamente interligados --- o HITS tende a
+concentrar quase toda a massa dos \emph{scores} nesses subgrupos,
+ainda que sejam pouco representativos do grafo global. Isto acontece
+porque o cálculo de autovetor reforça quem está fortemente
+interligado, mesmo que isoladamente. O SALSA, ao normalizar
+localmente por grau em cada passo do passeio, distribui a massa de
+forma mais equilibrada e evita esta concentração espúria
+\parencite{lempel2001}.
+
+\begin{notebox}[Caveat metodológico]
+    A vantagem do SALSA face ao Efeito TKC só se observa
+    empiricamente quando o corpus contém grafos com sub-comunidades
+    densas embutidas em estruturas maiores. Os três grafos analisados
+    nesta dissertação são demasiado pequenos para apresentarem tal
+    fenómeno; consequentemente, a propriedade só é confirmada no
+    plano teórico e \textbf{não} é empiricamente observada (ver
+    Capítulo~\ref{ch:resultados}, Secção~\ref{sec:discussao}).
+\end{notebox}
+
+\subsection{BiRank e normalizações simétricas}
+\label{sec:birank}
+
+O \textbf{BiRank}, proposto por \citet{he2014}, é um algoritmo
+projetado para grafos bipartidos ponderados. A diferença em relação
+ao PageRank reside na forma de \textbf{normalizar a matriz de pesos}
+antes da iteração:
+
+\begin{itemize}
+    \item A \textbf{normalização estocástica} (usada pelo PageRank e
+        por HITS) divide cada coluna $j$ da matriz $W$ pelo somatório
+        dos pesos de saída do vértice $j$ --- ou seja, divide por
+        $\sum_i W_{ij}$. Esta normalização torna as colunas
+        estocásticas (somam $1$) e dá uma interpretação probabilística
+        direta a cada transição.
+    \item A \textbf{normalização simétrica} divide cada entrada
+        $W_{ij}$ por $\sqrt{d_i \cdot d_j}$, onde $d_i$ e $d_j$ são
+        os graus (ponderados) dos vértices envolvidos. O efeito desta
+        segunda forma é \textbf{atenuar a influência desproporcional
+        de vértices de grau muito elevado} (que dominariam, sob
+        normalização estocástica), produzindo \emph{scores} mais
+        estáveis em grafos com distribuições de grau muito
+        assimétricas \parencite{he2014, zhou2004}.
+\end{itemize}
+
+A iteração do BiRank é:
+\begin{equation}
+    \mathbf{r}_{k+1} = \alpha S\mathbf{r}_{k} + (1 - \alpha)\mathbf{q}
+    \label{eq:birank}
+\end{equation}
+onde $S = D_{u}^{-1/2} W D_{v}^{-1/2}$ é a matriz simetricamente
+normalizada, $W$ é a matriz de pesos do grafo bipartido, $D_u$ e $D_v$
+são as matrizes diagonais dos graus (em cada lado da bipartição) e
+$\mathbf{q}$ é um vetor de consulta (\emph{prior information}). O
+BiRank é flexível para extensões a grafos multipartidos
+\parencite{he2015}.
+
+% ---------------------------------------------------------------------------
+\section{Aplicação das Métricas ao Ranking e Priorização de Requisitos}
+\label{sec:re}
+
+\subsection{Fundamentos da priorização de requisitos e desafios}
+\label{sec:re-fundamentos}
+
+A Engenharia de Requisitos (ER) é um domínio crucial da Engenharia de
+Software, responsável pela definição e manutenção das necessidades do
+sistema \parencite{sommerville2007}. Em projetos de software
+complexos, a priorização de requisitos é uma atividade essencial para
+o planeamento eficaz \parencite{karlsson2002, berander2005}.
+
+A atividade de rastreabilidade de requisitos estabelece as relações
+de dependência entre os requisitos, sendo essa a base estrutural para
+a priorização \parencite{gotel1994, sommerville2007}. A literatura
+identifica diversas técnicas tradicionais, como a \textbf{Comparação
+em Pares} (\emph{Pair-wise Comparison}), que exige que os
+\emph{stakeholders} comparem cada par de requisitos, sendo uma tarefa
+demorada e de alto esforço \parencite{karlsson2007, karlsson1997}.
+Outra técnica é a \textbf{Votação Acumulativa} (\emph{100-Points
+Method}), que distribui pontos fixos entre \emph{stakeholders}, sendo
+a prioridade final a soma dos pontos recebidos
+\parencite{ahl2005, leffingwell2003}. Técnicas como o
+\textbf{PERT/CPM} utilizam grafos para representar a sequência lógica
+de planeamento, permitindo uma ordenação topológica
+\parencite{kerzner2009}. O \textbf{AHP} (\emph{Analytic Hierarchy
+Process}) \parencite{saaty1980} é, historicamente, o método mais
+citado e usado em priorização de requisitos
+\parencite{karlsson1997, berander2005}: estabelece uma hierarquia de
+critérios e calcula pesos por comparação aos pares com verificação
+de consistência, mas tem complexidade $O(n^2)$ que o torna inviável
+para conjuntos com mais de algumas dezenas de requisitos.
+
+Entretanto, métodos tradicionais de Priorização de Requisitos de
+Software (PRS) sofrem com problemas intrínsecos de subjetividade e
+esforço \parencite{firesmith2004, achimugu2014, bukhsh2020}. Fatores
+como a inexperiência dos \emph{stakeholders}, a divergência na
+interpretação das escalas de prioridade e o foco excessivo em apenas
+um ponto de vista resultam em prioridades inconsistentes e ``posições
+inválidas'' \parencite{silva2018}. Estudos práticos demonstram que a
+Votação Acumulativa, por depender excessivamente da ação e da decisão
+do \emph{stakeholder}, pode gerar um alto número de posições
+inválidas e não resolve a duplicidade envolvida em requisitos
+interdependentes \parencite{silva2018}. \emph{Surveys} recentes
+\parencite{achimugu2014, bukhsh2020} confirmam estes desafios e
+identificam o \emph{ranqueamento baseado em grafos} como uma das
+direções mais promissoras para superar as limitações das técnicas
+manuais.
+
+\subsection{Construção do grafo de requisitos e posicionamento face
+a Silva et~al.\ (2018)}
+\label{sec:posicionamento}
+
+A aplicação de algoritmos de ranqueamento estrutural na PRS baseia-se
+na construção de um \textbf{grafo de requisitos}
+\parencite{silva2018}. Neste modelo, cada requisito é um vértice e as
+relações de dependência (obtidas pela rastreabilidade) são arestas
+direcionadas. Especificamente, se o Requisito $A$ depende de $B$, um
+\emph{link} de avanço origina-se em $A$ e aponta para $B$.
+
+O presente trabalho posiciona-se explicitamente como uma
+\textbf{evolução metodológica} do trabalho seminal de
+\citet{silva2018}, que propõe a aplicação do PageRank à priorização
+de requisitos. No estudo original, os autores: (i) restringem a
+análise ao \textbf{PageRank} isoladamente, sem comparação sistemática
+com outros algoritmos de ranqueamento; (ii) constroem o grafo de
+requisitos a partir de \textbf{matrizes de rastreabilidade
+preexistentes}, mantidas manualmente; e (iii) validam a abordagem com
+uma avaliação qualitativa junto de profissionais. A presente
+dissertação preserva o quadro conceptual de \citet{silva2018} ---
+grafo de requisitos como suporte da priorização --- e estende-o em
+três dimensões:
+
+\begin{enumerate}
+    \item \textbf{Alarga o leque de algoritmos}, comparando PageRank
+        com HITS \parencite{kleinberg1999} e SALSA
+        \parencite{lempel2001} sobre os mesmos grafos, recorrendo a
+        métricas formais de \emph{rank correlation} (Spearman $\rho$,
+        Kendall $\tau_b$) para quantificar a concordância.
+    \item \textbf{Automatiza a construção do grafo de requisitos} a
+        partir do código-fonte via análise estática (AST), eliminando
+        a dependência de uma matriz de rastreabilidade mantida
+        manualmente. Este \emph{trade-off} merece registo explícito:
+        substitui-se uma fonte fiável mas dispendiosa (rastreabilidade
+        validada por engenheiros) por outra mais escalável mas com
+        validade de construto a discutir
+        (Secção~\ref{sec:ameacas}, ameaças à validade).
+    \item \textbf{Valida o pipeline sobre três projetos reais de
+        código aberto} com perfis arquiteturais distintos, permitindo
+        observar o comportamento dos algoritmos sob diferentes
+        regimes de acoplamento.
+\end{enumerate}
+
+\subsection{Mapeamento dos algoritmos de ranqueamento para
+priorização}
+\label{sec:mapeamento}
+
+Este referencial teórico fundamenta a aplicação de algoritmos de
+ranqueamento de \emph{links} --- notavelmente PageRank, HITS e
+SALSA --- para objetivar e reduzir o esforço na PRS
+\parencite{silva2018, ding2002}. Esta abordagem transforma a rede de
+dependências de requisitos num grafo estrutural, permitindo que a
+priorização seja determinada pela topologia da rede, e não
+predominantemente pela perceção subjetiva do \emph{stakeholder}.
+
+O PageRank, em particular, tem-se mostrado sólido para a priorização
+\parencite{silva2018}. Foi usado para medir a complexidade de
+relacionamentos em sistemas \parencite{li2009} e para analisar o
+impacto de preocupações em requisitos \parencite{jin2009}.
+
+\subsection{Benefícios, limitações e considerações práticas}
+\label{sec:beneficios}
+
+A priorização via PageRank tem-se mostrado vantajosa em comparação
+com métodos manuais como a Votação Acumulativa e o PERT/CPM,
+oferecendo os seguintes benefícios \parencite{silva2018, he2014}:
+
+\begin{enumerate}
+    \item \textbf{Redução do esforço sem eliminação da subjetividade.}
+        O PageRank diminui o envolvimento direto dos
+        \emph{stakeholders}, focando-se na estrutura de dependência,
+        e é escalável para lidar com um alto número de requisitos.
+        Importa, contudo, sublinhar que a subjetividade é
+        \emph{deslocada} (do julgamento direto para a construção do
+        grafo), não eliminada --- ponto desenvolvido em
+        Secção~\ref{sec:ameacas}.
+    \item \textbf{Solução de Interdependência:} O PageRank, por meio
+        das suas iterações, consegue solucionar a duplicidade
+        envolvida em requisitos interdependentes, uma limitação não
+        resolvida pela Votação Acumulativa ou PERT/CPM.
+    \item \textbf{Ajuste Flexível de Prioridade:} É possível
+        introduzir informações externas (prioridade técnica ou de
+        negócio) no grafo por meio de \textbf{vértices artificiais}
+        \parencite{silva2018}. Essa técnica opcional permite que o
+        \emph{rank} de um requisito e o seu fecho transitivo de
+        dependências sejam ajustados.
+\end{enumerate}
+
+Como consideração prática, embora o PageRank ainda possa resultar em
+posições inválidas, esta abordagem estrutural revelou-se mais
+favorável do que as técnicas manuais, apresentando menos
+inconsistências e maior consistência com a lógica de dependência do
+sistema \parencite{silva2018}. As limitações da abordagem incluem as
+vulnerabilidades topológicas, como o \textbf{Efeito TKC}, que o SALSA
+foi especificamente desenvolvido para mitigar \parencite{lempel2001}.

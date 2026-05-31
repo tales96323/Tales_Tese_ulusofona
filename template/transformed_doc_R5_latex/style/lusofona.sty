@@ -92,11 +92,14 @@
     linkcolor=LusofonaBlue,
     citecolor=LusofonaBlue,
     urlcolor=LusofonaBlue]{hyperref}
-\RequirePackage[noabbrev,portuguese]{cleveref}
 
 % --- Matemática ------------------------------------------------------------
 \RequirePackage{amsmath, amssymb, amsthm, mathtools}
 \RequirePackage{bm}
+
+% cleveref deve ser carregado depois de amsmath e hyperref.
+% O idioma é detetado automaticamente a partir do babel.
+\RequirePackage[noabbrev]{cleveref}
 
 % --- Listings (código e JSON) ----------------------------------------------
 \RequirePackage{listings}
@@ -178,6 +181,7 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\eg}{e.g.\@\xspace}
 \newcommand{\ie}{i.e.\@\xspace}
+\newcommand{\cf}{cf.\@\xspace}
 \RequirePackage{xspace}
 
 % --- Marca de revisão (rodapé discreto) ------------------------------------

@@ -1,0 +1,12 @@
+Anotações sobre TESES R5 Latex. 
+
+1 - Adicionar no Capitulo de Conceitos Teóricos e Contextualização do Problema (Capitulo 2) os assuntos: Spearman e Kendall, pois sao os criterios de avaliacao dos resultados do trabalho.
+2 - Adicionar no Capitulo de Conceitos Teóricos e Contextualização do Problema (Capitulo 2) os assuntos: Explicacao e apresentacao dos conceitos de Grafo Denso e Grafo Esparco.
+3 - Adicionar no Capitulo de Conceitos Teóricos e Contextualização do Problema (Capitulo 2) os assuntos: AST Python, pois faz parte do fluxo principal do processo.
+4 - Quero melhorar a vizualizacao dos grafos direcionados usados no exemplo, pois as setas nao estao representadas nas figuras.
+5 - Alterar a representacao do Call_Graph. Quero apresentar o Call_Graph com outro layout que nao seja circular.
+6 - Necessario ajustar a formatacao da sitacao de nomes de arquivos, pois os nomes de alguns arquivos nao estao sendo justificados na formatacao do pdf.
+7 - Quero refazer as imagens de ranking_results para que a visualizacao fique melhor no papel (fundo branco).
+8 - Importante fazer um arquivo R6, assim terei o registro direto de todas as atualizacoes do projeto.
+9 - Recebi uma duvida por email e ela esta escrito assim: "Estou a mandar e-mail porque me lembrei de uma questão sobre o trabalho que é importante "resolver" (caso ainda não esteja).
+A questão é: como fazes a validação que o grafo que obténs está correto? Em mais detalhe: atendendo a que a pipeline tem várias fases, como garantes que o output de cada uma dessas fases está correto e o grafo final representa de forma correta as dependências? Este aspeto é crítico para garantir a usabilidade da ferramenta." Nao sei como posso colocar no trabalho como posso fazer essa validacao, acho que a questao e apresentada no trabalho de forma satisfatorioa ja quando se diz que o conceito de Requisito nao e o de Sommervile, mas envolve a interdependecia feita a partir da analise estatica do codigo usando AST. Possivelmente quando falar do AST (Ponto 3 da anotacao) isso pode ficar mais claro.

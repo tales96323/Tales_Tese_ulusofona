@@ -1,0 +1,217 @@
+\chapter{Introdução}
+\label{ch:introducao}
+
+O Capítulo~\ref{ch:introducao} enquadra o problema da priorização
+estrutural de requisitos. A Secção~\ref{sec:motivacao} discute a
+motivação e os fatores recentes que tornaram esta investigação
+oportuna; a Secção~\ref{sec:problema} define formalmente o problema; a
+Secção~\ref{sec:objetivos} enuncia os objetivos e as
+\emph{research questions} do trabalho; a Secção~\ref{sec:contribuicoes}
+lista as contribuições; e a Secção~\ref{sec:estrutura} apresenta a
+estrutura do restante documento.
+
+\noindent\textbf{Conceitos-chave:} enquadramento; motivação; problema;
+priorização; \emph{research questions}; contribuições.
+
+% ---------------------------------------------------------------------------
+\section{Enquadramento e Motivação}
+\label{sec:motivacao}
+
+O desenvolvimento de sistemas de software em larga escala enfrenta
+desafios crescentes na gestão da complexidade e na organização de
+grandes volumes de informação interdependente \parencite{sommerville2007}.
+Tradicionalmente, a relevância de elementos dentro de uma rede de
+requisitos era determinada por análises textuais, comparações entre
+pares ou heurísticas manuais
+\parencite{karlsson2007, karlsson1997, berander2005}; a evolução da
+\textbf{Teoria dos Grafos} \parencite{newman2010, szwarcfiter2018}
+permitiu uma transição para métodos puramente estruturais, capazes de
+extrair informação latente diretamente da topologia do sistema.
+
+A motivação principal para este estudo surge da convergência entre
+algoritmos de alta performance já em produção na indústria e a
+necessidade de rigor analítico na Engenharia de Software. Dois marcos
+fundamentais impulsionaram esta investigação:
+
+\begin{itemize}
+    \item \textbf{Adopção industrial do SALSA pelo Twitter.}
+        Em \emph{Who To Follow}, o sistema de recomendação de
+        utilizadores do Twitter, \citet{gupta2013} propõem e descrevem
+        uma variante do algoritmo \textbf{SALSA}~\parencite{lempel2001}
+        para sugerir conexões entre utilizadores. Esta adopção em
+        produção, sobre um grafo de larga escala, demonstra a
+        viabilidade de usar passeios aleatórios em grafos para
+        determinar prestígio e relevância de forma escalável.
+
+    \item \textbf{Aplicação do PageRank à priorização de requisitos.}
+        A descoberta de pesquisas que aplicam o
+        \textbf{PageRank}~\parencite{page1999} à priorização de
+        requisitos de software
+        \parencite{silva2018, jin2009, li2009} sustenta a hipótese de
+        que a estrutura de dependências de um sistema contém
+        informação latente suficiente para ordenar requisitos de forma
+        mais consistente do que técnicas predominantemente subjetivas
+        \parencite{firesmith2004, achimugu2014}.
+\end{itemize}
+
+Dessa forma, o trabalho enquadra-se na busca por modelos matemáticos
+que minimizem o viés humano em decisões críticas de engenharia,
+utilizando propriedades topológicas para extrair inteligência de grafos
+de software.
+
+% ---------------------------------------------------------------------------
+\section{Problema}
+\label{sec:problema}
+
+O \textbf{ranqueamento de requisitos} --- termo correntemente
+designado na literatura por \textbf{priorização de requisitos}
+\parencite{karlsson2002, firesmith2004, silva2018, bukhsh2020} ---
+consiste em produzir uma ordem total (ou parcial) sobre o conjunto de
+requisitos $R = \{r_1, r_2, \ldots, r_n\}$ de um sistema, a partir de
+critérios que reflitam a importância relativa de cada requisito para a
+entrega de valor, a estabilidade arquitetural ou o risco do projeto.
+Formalmente, dado o conjunto $R$ e uma relação de dependência
+$D \subseteq R \times R$, em que $(r_i, r_j) \in D$ se $r_i$ depende
+de $r_j$, a tarefa de priorização procura uma função
+$\pi: R \rightarrow \mathbb{R}$ que atribua a cada requisito um
+\emph{score} compatível com a sua centralidade na rede $(R, D)$.
+
+\begin{notebox}[Nota ontológica]
+    No presente trabalho, ``requisito'' é uma \textbf{agregação de
+    responsabilidades implementadas no código-fonte}, identificada
+    via um mapeamento explícito \code{func\_to\_req} (Secção
+    \ref{ch:metodologia}). Não corresponde, portanto, a um requisito
+    funcional clássico no sentido de \citet{sommerville2007}, mas
+    serve como \emph{proxy} de \emph{domain feature} para efeitos de
+    ranqueamento estrutural. Esta opção é discutida em detalhe na
+    Secção~\ref{sec:posicionamento} (posicionamento face à literatura)
+    e nas ameaças à validade (Secção~\ref{sec:ameacas}).
+\end{notebox}
+
+As técnicas tradicionais de priorização --- Comparação em Pares
+\parencite{karlsson2007}, Votação Acumulativa
+\parencite{leffingwell2003, ahl2005}, AHP (\emph{Analytic Hierarchy
+Process}) \parencite{saaty1980, karlsson1997} e PERT/CPM
+\parencite{kerzner2009} --- sofrem de problemas intrínsecos de
+subjetividade e esforço \parencite{firesmith2004}. A inexperiência dos
+\emph{stakeholders}, a divergência na interpretação das escalas de
+prioridade e o foco excessivo num único ponto de vista resultam em
+prioridades inconsistentes e em ``posições inválidas''
+\parencite{silva2018}. Em particular, a Votação Acumulativa, por
+depender excessivamente da decisão direta do \emph{stakeholder}, não
+resolve a duplicidade envolvida em requisitos mutuamente dependentes
+\parencite{silva2018}.
+
+Este trabalho justifica-se, portanto, ao investigar e comparar a
+eficácia do \textbf{PageRank}, \textbf{HITS} e \textbf{SALSA} na
+priorização estrutural de requisitos, sobre grafos extraídos
+automaticamente do código-fonte, oferecendo um modelo analítico que
+minimize o esforço dos \emph{stakeholders} e que utilize integralmente
+a rastreabilidade de requisitos disponível
+\parencite{gotel1994, rasiman2022}.
+
+% ---------------------------------------------------------------------------
+\section{Objetivos e \emph{Research Questions}}
+\label{sec:objetivos}
+
+O objetivo desta dissertação é \textbf{investigar e comparar a
+eficácia} dos algoritmos PageRank, HITS e SALSA na priorização
+estrutural de requisitos de software, fornecendo um modelo analítico
+que utilize a rastreabilidade entre requisitos para garantir
+consistência em sistemas de larga escala. Em concreto, pretende-se:
+(i) \textbf{formalizar} a aplicação de processos estocásticos e de
+abordagens de Teoria dos Grafos à modelação de interdependências entre
+requisitos e à determinação de fluxos de influência;
+(ii) \textbf{desenvolver} um protótipo (ReqGraph) que extraia, de
+forma totalmente automatizada e reprodutível, o grafo de requisitos a
+partir do código-fonte de um projeto Python; (iii) \textbf{avaliar
+empiricamente}, por meio de experimentação sobre projetos reais de
+código aberto, o comportamento comparativo dos três algoritmos,
+identificando convergências e divergências de ranking e discutindo-as
+à luz da arquitetura conhecida dos sistemas analisados.
+
+Estes objetivos materializam-se nas seguintes \textit{research
+questions} (RQs), formuladas de forma verificável e respondidas no
+Capítulo~\ref{ch:resultados}:
+
+\begin{description}
+    \item[RQ1.] Em que medida os rankings produzidos por PageRank,
+        HITS e SALSA \emph{concordam} entre si quando aplicados a
+        grafos de requisitos extraídos automaticamente por análise
+        estática (AST)? A concordância é medida pelo coeficiente de
+        Spearman ($\rho$) e Kendall ($\tau_b$) entre cada par de
+        algoritmos.
+    \item[RQ2.] Como varia essa concordância em função das
+        propriedades estruturais do grafo (densidade, presença de
+        ciclos, simetria de graus)?
+    \item[RQ3.] Em que medida os \emph{top-$k$ requisitos} apontados
+        pelos algoritmos correspondem a elementos conhecidos como
+        arquiteturalmente centrais nos projetos analisados (\ie\
+        qual a coerência arquitetural dos rankings produzidos)?
+\end{description}
+
+A formulação destas RQs permite distinguir o que esta investigação
+\emph{demonstra} (acordo/desacordo entre algoritmos sobre os mesmos
+dados) do que \emph{não} demonstra (validade preditiva face a juízos
+humanos --- ver Secção~\ref{sec:ameacas} e
+Secção~\ref{sec:trabalho-futuro}).
+
+% ---------------------------------------------------------------------------
+\section{Contribuições}
+\label{sec:contribuicoes}
+
+As principais contribuições desta dissertação são:
+
+\begin{enumerate}
+    \item \textbf{Pipeline reprodutível para extração de grafos de
+        requisitos.} Implementação do protótipo \emph{ReqGraph}, que
+        automatiza a transformação \emph{Código-fonte
+        \(\rightarrow\) AST \(\rightarrow\) Call Graph
+        \(\rightarrow\) Grafo de Requisitos} sobre projetos Python,
+        recorrendo exclusivamente a análise estática e a artefactos
+        canónicos da comunidade científica (NetworkX, Graphviz).
+    \item \textbf{Implementação aberta do SALSA.} Implementação manual
+        e documentada do algoritmo SALSA \parencite{lempel2001}, uma
+        vez que o NetworkX não a disponibiliza nativamente, incluindo
+        o tratamento explícito de vértices absorventes por
+        redistribuição uniforme.
+    \item \textbf{Comparação empírica quantitativa entre PageRank,
+        HITS e SALSA} sobre grafos reais de requisitos derivados de
+        três projetos \emph{open source} representativos de regimes
+        crescentes de acoplamento arquitetural (CPython \emph{stdlib},
+        Flask e \emph{scikit-learn}). A comparação utiliza métricas
+        formais de correlação de ranks (Spearman $\rho$, Kendall
+        $\tau_b$) entre cada par de algoritmos.
+    \item \textbf{Mecanismo de redução do custo de mapeamento.}
+        Formalização de um \emph{prompt} estruturado
+        (\code{llm\_prompt\_mapping.md}) que permite gerar o
+        dicionário \code{func\_to\_req} via modelos de linguagem de
+        grande escala, mitigando a principal fricção operacional da
+        abordagem.
+\end{enumerate}
+
+O código-fonte completo, os mapeamentos \code{func\_to\_req}
+utilizados e os artefactos gerados nas experiências encontram-se
+publicamente disponíveis em
+\url{https://github.com/tales96323/Tales_Tese_ulusofona}.
+
+% ---------------------------------------------------------------------------
+\section{Estrutura do Documento}
+\label{sec:estrutura}
+
+O restante documento está organizado da seguinte forma. O
+\textbf{Capítulo~\ref{ch:fundamentos}} apresenta os conceitos teóricos
+relevantes --- Teoria dos Grafos, algoritmos de ranqueamento e
+fundamentos da Engenharia de Requisitos --- e contextualiza o
+problema, posicionando esta dissertação em relação ao trabalho de
+\citet{silva2018}, do qual constitui uma evolução metodológica. O
+\textbf{Capítulo~\ref{ch:metodologia}} descreve a metodologia
+adotada, a arquitetura do protótipo ReqGraph, o protocolo experimental
+e o protocolo de mapeamento \code{func\_to\_req}. O
+\textbf{Capítulo~\ref{ch:resultados}} apresenta e discute os
+resultados obtidos nos três casos de estudo, recorrendo a métricas
+formais de correlação de ranks e a uma análise dedicada de
+\emph{ameaças à validade} segundo o referencial de
+\citet{wohlin2012}. O \textbf{Capítulo~\ref{ch:conclusao}} conclui o
+trabalho, sintetiza as contribuições e identifica linhas de trabalho
+futuro.

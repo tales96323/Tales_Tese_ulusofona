@@ -392,18 +392,18 @@ def export_results_json(results, output_path):
 # 4. VISUALIZAÇÕES PNG
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Paleta de cores inspirada em design moderno
+# Paleta de cores para impressão (fundo branco — adequado a papel)
 COLORS = {
-    "pagerank": "#6366F1",       # Indigo vibrante
-    "hits_hub": "#F59E0B",       # Âmbar
-    "hits_auth": "#10B981",      # Esmeralda
-    "salsa_hub": "#EF4444",      # Vermelho
-    "salsa_auth": "#3B82F6",     # Azul
-    "bg": "#0F172A",             # Slate escuro
-    "card": "#1E293B",           # Slate card
-    "text": "#F8FAFC",           # Texto claro
-    "grid": "#334155",           # Grid sutil
-    "subtext": "#94A3B8",        # Texto secundário
+    "pagerank": "#4338CA",       # Indigo escuro
+    "hits_hub": "#B45309",       # Âmbar escuro
+    "hits_auth": "#047857",      # Esmeralda escura
+    "salsa_hub": "#B91C1C",      # Vermelho escuro
+    "salsa_auth": "#1D4ED8",     # Azul escuro
+    "bg": "#FFFFFF",             # Fundo branco
+    "card": "#F8FAFC",           # Card cinza muito claro
+    "text": "#1E293B",           # Texto escuro
+    "grid": "#CBD5E1",           # Grid claro
+    "subtext": "#475569",        # Texto secundário
 }
 
 

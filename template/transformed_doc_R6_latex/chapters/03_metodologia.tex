@@ -1,0 +1,444 @@
+\chapter{Metodologia}
+\label{ch:metodologia}
+
+A presente investigação adota uma abordagem
+\textbf{quantitativa e experimental}, fundamentada na modelagem
+matemática de sistemas de software através da Teoria dos Grafos e na
+execução repetível do \emph{pipeline} analítico sobre projetos reais
+de código aberto. O Capítulo~\ref{ch:metodologia} detalha:
+Secção~\ref{sec:estrategia} --- a estratégia de investigação;
+Secção~\ref{sec:reqgraph} --- a arquitetura do protótipo \emph{ReqGraph};
+Secção~\ref{sec:tecnologia} --- as escolhas de implementação;
+Secção~\ref{sec:protocolo} --- o corpus experimental, o protocolo
+\code{func\_to\_req} e os critérios de avaliação. A Secção~\ref{sec:metricas}
+formaliza as métricas de comparação de rankings.
+
+\noindent\textbf{Conceitos-chave:} abordagem quantitativa; análise
+estática; AST; \emph{pipeline} reprodutível; protocolo experimental;
+\emph{rank correlation}.
+
+% ---------------------------------------------------------------------------
+\section{Estratégia de Investigação}
+\label{sec:estrategia}
+
+A investigação está estruturada em quatro etapas. Em primeiro lugar,
+\textbf{fundamentou-se teoricamente} a aplicação de algoritmos de
+ranqueamento de grafos à Priorização de Requisitos de Software (PRS),
+conforme exposto no Capítulo~\ref{ch:fundamentos}, consolidando o
+entendimento sobre as diferenças estruturais entre o HITS
+(dualidade \emph{hubs}/autoridades), o SALSA (passeios aleatórios em
+grafos bipartidos) e o PageRank (distribuição estacionária em cadeias
+de Markov). Em segundo lugar, \textbf{projetou-se e implementou-se}
+um protótipo --- o \emph{ReqGraph} --- capaz de extrair
+automaticamente o grafo de dependências entre requisitos a partir do
+código-fonte de uma aplicação Python, recorrendo a análise estática
+via \emph{Abstract Syntax Tree} (AST). Em terceiro lugar,
+\textbf{definiu-se um protocolo experimental} para aplicar os
+algoritmos PageRank, HITS e SALSA aos grafos extraídos de três
+projetos de código aberto de complexidade crescente. Em quarto lugar,
+\textbf{quantificou-se a concordância} entre rankings via Spearman
+$\rho$ e Kendall $\tau_b$, respondendo a RQ1, RQ2 e RQ3
+(Secção~\ref{sec:objetivos}).
+
+O ambiente de experimentação é \textbf{local}, em Python 3.8+,
+recorrendo às bibliotecas \code{ast} (biblioteca padrão),
+\code{NetworkX} (manipulação de grafos), \code{NumPy}/\code{SciPy}
+(computação matricial) e \code{Matplotlib} (visualização). Esta
+escolha justifica-se pela necessidade de manipular matrizes de
+adjacência e realizar cálculos iterativos de autovetores de forma
+escalável, em ambiente totalmente reprodutível e sem dependência de
+serviços externos.
+
+A opção por \textbf{análise estática} (em detrimento de instrumentação
+dinâmica) deve-se à reprodutibilidade dos resultados: o grafo
+extraído depende exclusivamente do código-fonte, sem variabilidade
+introduzida por entradas de execução. Esta opção é coerente com a
+literatura sobre rastreabilidade de requisitos, que defende a
+derivação determinística do grafo de dependências a partir de
+artefactos estáveis do sistema
+\parencite{silva2018, gotel1994, rasiman2022}.
+
+A análise dos resultados focar-se-á em três dimensões:
+(i) \textbf{Consistência Algorítmica} --- comparação entre os
+rankings gerados pelos três algoritmos, recorrendo a coeficientes de
+correlação de Spearman e Kendall (RQ1);
+(ii) \textbf{Caracterização Estrutural} --- densidade, presença de
+ciclos e identificação dos vértices centrais em cada Grafo de
+Requisitos (RQ2);
+(iii) \textbf{Coerência Arquitetural} --- comparação qualitativa
+entre os requisitos ranqueados como mais importantes e a arquitetura
+conhecida de cada projeto (RQ3).
+
+% ---------------------------------------------------------------------------
+\section{Arquitetura do Protótipo ReqGraph}
+\label{sec:reqgraph}
+
+O \emph{ReqGraph} é o componente que materializa a transformação do
+código-fonte num \textbf{Grafo de Requisitos}
+$G_R = (V_R, E_R)$, em que cada vértice $v \in V_R$ representa um
+requisito de domínio e cada aresta direcionada
+$(r_i, r_j) \in E_R$ traduz uma dependência de implementação
+detetada entre os requisitos $r_i$ e $r_j$. O \emph{pipeline}
+analítico é composto por quatro estágios sequenciais:
+
+\begin{enumerate}
+    \item \textbf{Análise estática via AST.} Cada ficheiro Python
+        (\code{.py}) do projeto é parseado pelo módulo \code{ast} da
+        biblioteca padrão. O resultado é uma árvore sintática a
+        partir da qual são extraídas definições de funções
+        (\code{FunctionDef}), métodos de classes e invocações
+        (\code{Call}).
+    \item \textbf{Construção do Call Graph.} As invocações detetadas
+        dão origem a um grafo direcionado $G_C = (V_C, E_C)$ em que
+        cada vértice corresponde a uma função (ou método) e cada
+        aresta $(f_i, f_j)$ indica que $f_i$ invoca $f_j$. O
+        algoritmo resolve referências entre módulos (via
+        \code{import}), referências a métodos da própria classe
+        (\code{self.method()}) e qualifica funções pelo seu
+        \emph{namespace} para evitar colisões de nomes.
+    \item \textbf{Mapeamento \code{func\_to\_req}.} É fornecido pelo
+        investigador um dicionário que associa cada função a um
+        requisito de domínio (\eg\
+        \code{parse\_args $\to$ REQ\_PARSING}). Este artefacto é o
+        ponto de contacto entre o nível técnico (funções) e o nível
+        semântico (requisitos). Para reduzir a fricção da sua
+        produção, foi também desenvolvido um \emph{prompt}
+        estruturado (\code{reqgraph/llm\_prompt\_mapping.md}) que
+        permite gerar o mapeamento de forma assistida via modelos de
+        linguagem de grande escala (ChatGPT, Claude, Gemini). O
+        protocolo de construção deste mapeamento é descrito em
+        detalhe na Secção~\ref{sec:protocolo-func2req}.
+    \item \textbf{Derivação do Grafo de Requisitos.} Para cada
+        aresta $(f_i, f_j) \in E_C$ tal que $f_i$ está mapeada para
+        o requisito $r_a$ e $f_j$ está mapeada para o requisito
+        $r_b$, com $r_a \neq r_b$, é introduzida a aresta
+        $(r_a, r_b)$ em $E_R$. Arestas duplicadas e auto-laços
+        (correspondentes a invocações internas dentro do mesmo
+        requisito) são descartados.
+\end{enumerate}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\linewidth]{call_graph_simples_stdlib.png}
+    \caption{\emph{Call Graph} extraído via AST do CPython
+    \emph{stdlib} (\code{argparse} + \code{http.server}). Cada vértice
+    é uma função ou método; cada aresta $(f_i, f_j)$ indica que $f_i$
+    invoca $f_j$.}
+    \label{fig:call-graph-stdlib}
+\end{figure}
+
+O código-fonte completo do \emph{ReqGraph}, incluindo o módulo
+\code{ranker.py} descrito na Secção~\ref{sec:tecnologia}, está
+disponível em \url{https://github.com/tales96323/Tales_Tese_ulusofona}.
+
+% ---------------------------------------------------------------------------
+\section{Implementação e Tecnologias}
+\label{sec:tecnologia}
+
+O protótipo foi implementado em \textbf{Python 3.8+}, organizado como
+pacote instalável via \code{pip install -e reqgraph/}. As escolhas
+tecnológicas seguem critérios de robustez e adesão a \emph{standards}
+da comunidade científica (Tabela~\ref{tab:tecnologias}).
+
+\begin{table}[ht]
+    \centering
+    \caption{Tecnologias utilizadas e respetivas funções no
+    \emph{pipeline}.}
+    \label{tab:tecnologias}
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        \textbf{Tecnologia} & \textbf{Versão mín.} & \textbf{Função no \emph{pipeline}} \\
+        \midrule
+        \code{ast} (biblioteca padrão)
+            & ---            & \emph{Parsing} sintático do código-fonte Python \\
+        \code{networkx} & $\geq 3.0$ & Manipulação e análise de grafos direcionados \\
+        \code{matplotlib} & $\geq 3.5$ & Geração de visualizações em PNG \\
+        \code{numpy} / \code{scipy} & $\geq 1.24$ / $\geq 1.10$ & Computação matricial \\
+        \code{graphviz} (DOT) & --- & Formato de exportação canónico \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+A interface de linha de comando
+(\code{python -m reqgraph <projeto> --mapping <mapeamento.py>}) expõe
+o \emph{pipeline} completo, gerando como artefactos:
+\code{call\_graph.png}, \code{req\_graph.png},
+\code{req\_graph.json} (lista de adjacência) e
+\code{req\_graph.dot} (formato Graphviz).
+
+\subsection{Módulo de Ranqueamento (\code{ranker.py})}
+\label{sec:ranker}
+
+O módulo \code{ranker.py} consome o ficheiro \code{req\_graph.json}
+produzido pelo \emph{ReqGraph} e aplica três algoritmos de
+ranqueamento sobre o grafo direcionado $G_R$. A semântica adotada
+para as arestas é: $r_a \rightarrow r_b$ significa que o requisito
+$r_a$ \textbf{depende de} $r_b$. Em consequência, o \emph{in-degree}
+de um vértice mede quantos requisitos dele dependem (uma autoridade
+no sentido de Kleinberg), enquanto o \emph{out-degree} mede quantos
+outros requisitos ele invoca (um \emph{hub}).
+
+\subsection{PageRank}
+\label{sec:impl-pagerank}
+
+A implementação recorre a \code{nx.pagerank} com parâmetros
+canónicos: fator de amortecimento $d = 0{,}85$, número máximo de
+iterações $100$ e tolerância de convergência $10^{-6}$.
+
+\paragraph{Tratamento de \emph{Dangling Nodes}.}
+\label{sec:dangling}
+Vértices sem arestas de saída são tratados internamente pelo
+NetworkX por \textbf{redistribuição uniforme}: a massa de
+probabilidade que um vértice sem arestas de saída teria de
+``exportar'' é dividida em partes iguais entre todos os vértices do
+grafo, mantendo a matriz de transição estocástica. Este artifício é
+necessário para garantir que a cadeia de Markov subjacente é
+ergódica e, portanto, que a iteração converge para uma única
+distribuição estacionária \parencite{brin1998}. A soma dos
+\emph{scores} totaliza $1{,}0$, permitindo interpretá-los como uma
+distribuição de probabilidade.
+
+\subsection{HITS}
+\label{sec:impl-hits}
+
+A implementação recorre a \code{nx.hits} com tolerância $10^{-8}$ e
+$100$ iterações máximas. Retorna dois vetores normalizados (norma
+euclidiana unitária): \emph{hubs} e \emph{authorities}. A
+interpretação para a PRS é direta: um requisito com elevado
+\emph{authority} é uma \textbf{dependência crítica} do sistema
+(alterações nele propagam-se a muitos consumidores), enquanto um
+requisito com elevado \emph{hub} é um \textbf{orquestrador}
+(alterações nele afetam muitas integrações).
+
+\subsection{SALSA}
+\label{sec:impl-salsa}
+
+O NetworkX \textbf{não fornece} uma implementação do SALSA, pelo que
+esta foi desenvolvida manualmente seguindo \citet{lempel2001}. Para
+cada aresta $(u, v) \in E_R$, constroem-se duas matrizes de
+transição:
+
+\begin{itemize}
+    \item $H \rightarrow A$: probabilidade $1/\text{out}(u)$ de um
+        \emph{hub} $u$ transitar para a \emph{authority} $v$.
+    \item $A \rightarrow H$: probabilidade $1/\text{in}(v)$ de uma
+        \emph{authority} $v$ regressar a um \emph{hub} $u$.
+\end{itemize}
+
+A cadeia de \emph{hubs} tem matriz
+$T_{\text{hub}} = (A \rightarrow H)(H \rightarrow A)$, e a de
+\emph{authorities} tem
+$T_{\text{auth}} = (H \rightarrow A)(A \rightarrow H)$. Os
+\emph{scores} finais são as distribuições estacionárias obtidas por
+\emph{power iteration} com tolerância $10^{-8}$. Linhas nulas
+(correspondentes a vértices absorventes) são tratadas por
+redistribuição uniforme, em analogia ao tratamento de
+\emph{dangling nodes} do PageRank.
+
+A diferença substantiva face ao HITS é a \textbf{normalização local}
+(por grau de cada vértice), que torna o SALSA teoricamente menos
+sensível ao \textbf{Efeito TKC}. Como discutido em
+Secção~\ref{sec:salsa}, esta vantagem só é observável empiricamente
+em grafos com sub-comunidades coesas embutidas; o corpus utilizado
+nesta dissertação não permite, por dimensão, observar este fenómeno.
+
+\subsection{Artefactos Gerados}
+\label{sec:artefactos}
+
+Para cada projeto analisado, o \code{ranker.py} produz dois
+artefactos: \code{ranking\_results.json} (com os \emph{scores}
+completos dos três algoritmos) e \code{ranking\_results.png} (com
+gráficos de barras horizontais agrupados por algoritmo). Quando
+executado com a \emph{flag} \code{--all}, gera adicionalmente
+\code{ranking\_consolidado.json} e \code{ranking\_comparativo.png}
+na raiz do projeto, agregando os resultados dos três casos de estudo.
+A partir de R5, é também produzido \code{rank\_correlations.json}
+pelo \emph{script} auxiliar \code{compute\_rank\_correlations.py},
+que contém os coeficientes Spearman e Kendall para cada par de
+algoritmos em cada caso de estudo.
+
+% ---------------------------------------------------------------------------
+\section{Métricas de Comparação de Rankings}
+\label{sec:metricas}
+
+A comparação entre rankings produzidos por algoritmos diferentes ---
+elemento central de RQ1 e RQ2 --- é feita de forma formal,
+recorrendo a duas métricas clássicas de \emph{rank correlation}:
+
+\begin{description}
+    \item[Coeficiente de Spearman ($\rho$).] Pearson aplicado aos
+        \emph{ranks} (em vez dos valores brutos), com tratamento de
+        \emph{ties} via \emph{mean ranks}. Mede correlação monotónica
+        \parencite{spearman1904}.
+        \[
+            \rho = 1 - \frac{6 \sum_i d_i^2}{n(n^2 - 1)}
+            \qquad \text{(sem \emph{ties})}
+        \]
+        Com \emph{ties}, é calculado como a correlação de Pearson dos
+        \emph{mean ranks} (definição usada no script
+        \code{compute\_rank\_correlations.py}).
+
+    \item[Coeficiente de Kendall ($\tau_b$).] Baseado em pares
+        concordantes e discordantes \parencite{kendall1938};
+        $\tau_b$ é a variante com correção de \emph{ties}
+        \parencite{goodman1954}:
+        \[
+            \tau_b = \frac{|C| - |D|}
+                {\sqrt{(P_0 - T_a)(P_0 - T_b)}}
+        \]
+        onde $|C|$ e $|D|$ são os números de pares concordantes e
+        discordantes, $P_0 = n(n-1)/2$ e $T_a, T_b$ contam pares com
+        \emph{ties} em cada ranking.
+\end{description}
+
+\paragraph{Critério a priori de ``convergência''.} Para fins de
+discussão (Secção~\ref{sec:discussao}), define-se \emph{a priori},
+antes de observar os dados, que existe \textbf{convergência entre dois
+algoritmos} quando se verifica qualquer um dos seguintes critérios:
+
+\begin{enumerate}[label=(\alph*)]
+    \item Spearman $\rho \geq 0{,}7$ \emph{e} Kendall $\tau_b \geq 0{,}55$
+        (ambos os limiares correspondem ao limiar usual de
+        ``\emph{strong correlation}'' na literatura \parencite{wohlin2012});
+    \item \emph{Top-1} idêntico em pelo menos dois dos três
+        algoritmos.
+\end{enumerate}
+
+Quando nenhum dos critérios se verifica, fala-se de
+\textbf{divergência}; nesse caso, a interpretação é qualitativa (cada
+algoritmo capta uma dimensão diferente de centralidade, conforme
+discussão em Secção~\ref{sec:discussao}).
+
+% ---------------------------------------------------------------------------
+\section{Corpus Experimental e Protocolo de Avaliação}
+\label{sec:protocolo}
+
+\subsection{Seleção dos Casos de Estudo}
+\label{sec:selecao}
+
+Para validar a abordagem em diferentes regimes de complexidade
+arquitetural, foram selecionados \textbf{três projetos reais de
+código aberto} disponíveis no GitHub, organizados por nível
+crescente de acoplamento esperado
+(Tabela~\ref{tab:projetos}). A escolha procura cobrir
+\emph{regimes distintos}: biblioteca padrão monolítica
+(CPython \emph{stdlib}), \emph{microframework} web (Flask) e
+\emph{framework} de \emph{machine learning} com forte composição
+funcional (\emph{scikit-learn}). A seleção privilegia ficheiros
+representativos do \emph{core} arquitetural de cada projeto,
+evitando módulos auxiliares (testes, utilitários, \emph{type stubs}).
+
+\begin{table}[ht]
+    \centering
+    \caption{Projetos selecionados como casos de estudo.}
+    \label{tab:projetos}
+    \footnotesize
+    \begin{tabularx}{\linewidth}{@{}l l X l@{}}
+        \toprule
+        \textbf{Nível} & \textbf{Projeto} & \textbf{Ficheiros Analisados} & \textbf{Origem (GitHub)} \\
+        \midrule
+        Simples & CPython \emph{stdlib}
+            & \code{Lib/argparse.py}, \code{Lib/http/server.py}
+            & \url{https://github.com/python/cpython} \\
+        Médio & Flask
+            & \code{src/flask/app.py}, \code{src/flask/cli.py},
+              \code{src/flask/blueprints.py}
+            & \url{https://github.com/pallets/flask} \\
+        Complexo & \emph{scikit-learn}
+            & \code{sklearn/pipeline.py},
+              \code{sklearn/linear\_model/\_base.py},
+              \code{sklearn/linear\_model/\_logistic.py},
+              \code{sklearn/tree/\_classes.py}
+            & \url{https://github.com/scikit-learn/scikit-learn} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Protocolo de Construção do Mapeamento
+\code{func\_to\_req}}
+\label{sec:protocolo-func2req}
+
+Dado que o passo (3) do \emph{pipeline}
+(Secção~\ref{sec:reqgraph}) é a principal fonte de subjetividade
+residual, o presente trabalho formaliza explicitamente um protocolo
+para a sua construção:
+
+\begin{enumerate}
+    \item \textbf{Levantamento de domínios candidatos.} Identificar,
+        a partir da documentação oficial do projeto, módulos
+        principais e \emph{API} pública, um conjunto inicial de
+        \emph{features} de alto nível (\eg\ \emph{routing},
+        \emph{request handling}, \emph{error handling} no Flask).
+    \item \textbf{Definição de granularidade.} Cada requisito deve
+        agregar entre 5 e 30 funções; conjuntos com menos de 5
+        funções fundem-se com domínios próximos; conjuntos com mais
+        de 30 dividem-se segundo a sub-estrutura modular.
+    \item \textbf{Atribuição.} Cada função do código-fonte é
+        atribuída a exatamente um requisito; funções utilitárias
+        partilhadas por vários requisitos são atribuídas ao
+        requisito do qual são chamadas mais frequentemente.
+    \item \textbf{Revisão de cobertura.} Verificar que todas as
+        funções identificadas pela AST estão mapeadas; funções não
+        mapeadas tornam-se \emph{dangling nodes} no \emph{Call Graph}
+        e influenciam o ranking via redistribuição uniforme.
+    \item \textbf{Validação de coerência.} Inspecionar
+        manualmente o \code{req\_graph.png} gerado: arestas
+        inesperadas (\eg\ ciclos que contradigam a arquitetura
+        conhecida) podem indicar erros de mapeamento; arestas
+        ausentes (\eg\ ausência de dependências esperadas) podem
+        indicar requisitos demasiado granulares.
+\end{enumerate}
+
+\begin{notebox}[Limitação reconhecida]
+    A presente dissertação executa este protocolo com um único
+    investigador, sem \emph{inter-rater reliability} (\eg\
+    Cohen's $\kappa$). A replicação por um segundo investigador,
+    com cálculo formal da concordância, fica identificada como
+    trabalho futuro (Secção~\ref{sec:trabalho-futuro}) e como
+    \emph{ameaça de validade interna}
+    (Secção~\ref{sec:ameacas}).
+\end{notebox}
+
+\subsection{Protocolo Experimental}
+\label{sec:protocolo-exp}
+
+Cada caso de estudo foi processado seguindo os mesmos seis passos,
+automatizados pelo \emph{script} \code{run\_tests.py}:
+
+\begin{enumerate}
+    \item Cópia dos ficheiros-alvo do repositório de origem para a
+        pasta \code{testes/<nivel>/}.
+    \item Construção manual do dicionário \code{func\_to\_req} em
+        \code{mapeamento.py}, seguindo o protocolo da
+        Secção~\ref{sec:protocolo-func2req}.
+    \item Execução do \emph{ReqGraph}:\\
+        \code{python -m reqgraph testes/<nivel>/ --mapping testes/<nivel>/mapeamento.py}
+    \item Inspeção dos artefactos gerados
+        (\code{call\_graph.png}, \code{req\_graph.png},
+        \code{req\_graph.json}).
+    \item Execução do \code{ranker.py} sobre o
+        \code{req\_graph.json} gerado.
+    \item Cálculo dos coeficientes de Spearman e Kendall entre cada
+        par de algoritmos, via \code{compute\_rank\_correlations.py}.
+\end{enumerate}
+
+\subsection{Dimensões de Análise}
+\label{sec:dimensoes}
+
+A análise dos resultados (Capítulo~\ref{ch:resultados}) é
+estruturada em três dimensões:
+
+\begin{itemize}
+    \item \textbf{Resultados Técnicos} --- métricas estruturais do
+        \emph{pipeline}: número de funções analisadas, arestas no
+        \emph{Call Graph}, requisitos identificados, arestas no
+        Grafo de Requisitos e densidade.
+    \item \textbf{Resultados Analíticos} --- interpretação dos
+        rankings: identificação dos requisitos mais críticos,
+        comparação entre os três algoritmos com Spearman e Kendall,
+        e discussão à luz da arquitetura conhecida de cada projeto.
+    \item \textbf{Ameaças à Validade} --- categorização das
+        limitações segundo o referencial de
+        \citet{wohlin2012}: \emph{construct}, \emph{internal},
+        \emph{external} e \emph{conclusion}.
+\end{itemize}

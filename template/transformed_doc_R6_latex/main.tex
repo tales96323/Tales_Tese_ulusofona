@@ -1,0 +1,91 @@
+% ============================================================================
+%  main.tex — Tese de Mestrado, Universidade Lusófona (R5, LaTeX).
+%
+%  Compilar com:
+%      xelatex main.tex
+%      biber main
+%      xelatex main.tex
+%      xelatex main.tex
+%
+%  Ou, em alternativa, pdflatex (com biber).
+%
+%  Estrutura:
+%      style/lusofona.sty       Estilo visual e configurações globais
+%      front/cover.tex          Capa
+%      front/acknowledgements.tex
+%      front/abstract_pt.tex    Resumo
+%      front/abstract_en.tex    Abstract
+%      front/abbreviations.tex  Abreviaturas, Siglas e Símbolos
+%      chapters/01_introducao.tex
+%      chapters/02_fundamentos.tex
+%      chapters/03_metodologia.tex
+%      chapters/04_resultados.tex
+%      chapters/05_conclusao.tex
+%      back/glossario.tex
+%      back/apendices.tex
+%      references.bib           Bibliografia BibTeX
+% ============================================================================
+\documentclass[11pt, a4paper, openright, twoside]{book}
+
+\usepackage{style/lusofona}
+
+\addbibresource{references.bib}
+
+% ----------------------------------------------------------------------------
+%  Metadados PDF
+% ----------------------------------------------------------------------------
+\hypersetup{
+    pdftitle={\thesistitle},
+    pdfauthor={\thesisauthor},
+    pdfsubject={\thesisdegree},
+    pdfkeywords={Requirements Engineering; PageRank; HITS; SALSA; AST; Graph Ranking},
+}
+
+\begin{document}
+
+% ============================================================================
+%  FRONT MATTER
+% ============================================================================
+\frontmatter
+
+\include{front/cover}
+
+\include{front/acknowledgements}
+\include{front/abstract_pt}
+\include{front/abstract_en}
+
+% Sumário, Lista de Figuras, Lista de Tabelas
+{\hypersetup{linkcolor=black}
+\tableofcontents
+\listoffigures
+\listoftables
+}
+
+\include{front/abbreviations}
+
+% ============================================================================
+%  MAIN MATTER
+% ============================================================================
+\mainmatter
+
+\include{chapters/01_introducao}
+\include{chapters/02_fundamentos}
+\include{chapters/03_metodologia}
+\include{chapters/04_resultados}
+\include{chapters/05_conclusao}
+
+% ============================================================================
+%  BIBLIOGRAFIA
+% ============================================================================
+\backmatter
+
+\printbibliography[heading=bibintoc, title={Bibliografia}]
+
+% ============================================================================
+%  BACK MATTER (Glossário, Apêndices, Anexos)
+% ============================================================================
+\appendix
+\include{back/glossario}
+\include{back/apendices}
+
+\end{document}

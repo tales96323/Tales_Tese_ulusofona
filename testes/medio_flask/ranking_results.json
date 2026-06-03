@@ -110,17 +110,17 @@
         },
         {
           "rank": 4,
-          "node": "REQ_REQUEST_HANDLING",
-          "score": 0.113749
-        },
-        {
-          "rank": 5,
           "node": "REQ_CLI_COMMANDS",
           "score": 0.113749
         },
         {
-          "rank": 6,
+          "rank": 5,
           "node": "REQ_CLI_FRAMEWORK",
+          "score": 0.113749
+        },
+        {
+          "rank": 6,
+          "node": "REQ_REQUEST_HANDLING",
           "score": 0.113749
         },
         {

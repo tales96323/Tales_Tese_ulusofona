@@ -1,0 +1,42 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+\begin{otherlanguage}{english}
+Software requirements prioritization is one of the most sensitive
+activities in Requirements Engineering. Traditional techniques such
+as \textbf{Cumulative Voting} and \textbf{PERT/CPM} --- described in
+detail in Chapter~\ref{ch:fundamentos} --- rely heavily on the
+subjective perception of stakeholders and tend to become inconsistent
+in systems with a large number of interdependent requirements
+\parencite{karlsson2002, silva2018}. This thesis investigates a
+structural alternative based on the application of graph ranking
+algorithms --- PageRank, HITS, and SALSA --- to the dependency graph
+between requirements.
+
+A Python \emph{open-source} prototype, \textbf{ReqGraph}, was
+developed to automate the pipeline
+\emph{source code \(\rightarrow\) AST \(\rightarrow\) call graph
+\(\rightarrow\) requirements graph}, together with the \code{ranker.py}
+module which applies the three algorithms to the extracted graph.
+Validation was conducted on three real open-source projects ---
+\emph{CPython stdlib}, \emph{Flask}, and \emph{scikit-learn} ---
+selected as representatives of increasing regimes of architectural
+coupling. The agreement between the rankings produced by the three
+algorithms is quantified using the \textbf{Spearman} (\(\rho\)) and
+\textbf{Kendall} (\(\tau_b\)) rank correlation coefficients. Results
+show that, in graphs with sufficient density, the algorithms partially
+agree on the most central requirements; in sparse graphs, they
+informatively diverge, offering complementary perspectives on
+importance --- transitive (PageRank), direct (HITS \emph{authority}),
+and orchestration (HITS \emph{hub}). We conclude that structural
+ranking constitutes a robust complement to traditional techniques,
+reducing --- but not eliminating --- subjective bias in requirements
+prioritization. We discuss in detail the limitations of the approach,
+namely the residual subjectivity of the \code{func\_to\_req} mapping
+and the small corpus size.
+
+\vspace{0.3cm}
+\noindent\textbf{Keywords:} Requirements Engineering; Structural
+Prioritization; Static Code Analysis; Graphs; PageRank; HITS; SALSA;
+Spearman Correlation.
+\end{otherlanguage}

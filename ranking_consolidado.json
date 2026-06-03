@@ -91,27 +91,27 @@
           },
           {
             "rank": 5,
-            "node": "REQ_CONFIGURATION",
+            "node": "REQ_HTTP_HANDLER",
             "score": 0.0
           },
           {
             "rank": 6,
-            "node": "REQ_VALIDATION",
-            "score": 0.0
+            "node": "REQ_CONFIGURATION",
+            "score": -0.0
           },
           {
             "rank": 7,
-            "node": "REQ_HTTP_CONTENT",
-            "score": 0.0
+            "node": "REQ_VALIDATION",
+            "score": -0.0
           },
           {
             "rank": 8,
-            "node": "REQ_HTTP_LOGGING",
-            "score": 0.0
+            "node": "REQ_HTTP_CONTENT",
+            "score": -0.0
           },
           {
             "rank": 9,
-            "node": "REQ_HTTP_HANDLER",
+            "node": "REQ_HTTP_LOGGING",
             "score": -0.0
           }
         ],
@@ -138,27 +138,27 @@
           },
           {
             "rank": 5,
-            "node": "REQ_ACTIONS",
+            "node": "REQ_HTTP_CONTENT",
             "score": 0.0
           },
           {
             "rank": 6,
-            "node": "REQ_HTTP_HANDLER",
+            "node": "REQ_HTTP_LOGGING",
             "score": 0.0
           },
           {
             "rank": 7,
-            "node": "REQ_PARSING",
-            "score": 0.0
+            "node": "REQ_ACTIONS",
+            "score": -0.0
           },
           {
             "rank": 8,
-            "node": "REQ_HTTP_CONTENT",
+            "node": "REQ_HTTP_HANDLER",
             "score": -0.0
           },
           {
             "rank": 9,
-            "node": "REQ_HTTP_LOGGING",
+            "node": "REQ_PARSING",
             "score": -0.0
           }
         ]
@@ -374,17 +374,17 @@
           },
           {
             "rank": 4,
-            "node": "REQ_REQUEST_HANDLING",
-            "score": 0.113749
-          },
-          {
-            "rank": 5,
             "node": "REQ_CLI_COMMANDS",
             "score": 0.113749
           },
           {
-            "rank": 6,
+            "rank": 5,
             "node": "REQ_CLI_FRAMEWORK",
+            "score": 0.113749
+          },
+          {
+            "rank": 6,
+            "node": "REQ_REQUEST_HANDLING",
             "score": 0.113749
           },
           {

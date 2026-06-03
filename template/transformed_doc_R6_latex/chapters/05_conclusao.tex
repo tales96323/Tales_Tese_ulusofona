@@ -1,0 +1,241 @@
+\chapter{Conclusão}
+\label{ch:conclusao}
+
+O Capítulo~\ref{ch:conclusao} apresenta as principais conclusões da
+dissertação. A Secção~\ref{sec:sumario} sintetiza as contribuições,
+revisita os objetivos enunciados em
+Secção~\ref{sec:objetivos} e regista o estado de execução de cada
+um. A Secção~\ref{sec:trabalho-futuro} identifica linhas de trabalho
+futuro.
+
+\noindent\textbf{Conceitos-chave:} conclusão; síntese;
+contribuições; \emph{research questions} respondidas; trabalho
+futuro.
+
+% ---------------------------------------------------------------------------
+\section{Sumário e Principais Contribuições}
+\label{sec:sumario}
+
+Esta dissertação investigou a viabilidade de aplicar algoritmos de
+ranqueamento baseados em grafos --- concretamente PageRank, HITS e
+SALSA --- à priorização estrutural de requisitos de software. O
+problema original, exposto no Capítulo~\ref{ch:introducao}, partia da
+constatação de que as técnicas tradicionais de Priorização de
+Requisitos de Software (PRS), como a Votação Acumulativa, o AHP e o
+PERT/CPM, são fortemente dependentes da intervenção subjetiva dos
+\emph{stakeholders} e não escalam para sistemas com elevado número
+de requisitos interdependentes
+\parencite{silva2018, achimugu2014, bukhsh2020}.
+
+A resposta proposta consistiu em transferir parte do esforço de
+priorização para a topologia do sistema: se o grafo de dependências
+contém informação latente sobre a importância relativa dos
+requisitos, então um algoritmo de ranqueamento adequadamente
+escolhido pode extrair essa informação de forma reprodutível e
+automatizada. Para validar esta hipótese, foram desenvolvidos dois
+artefactos:
+
+\begin{itemize}
+    \item \textbf{ReqGraph} --- um protótipo Python, organizado
+        como pacote instalável, que automatiza o \emph{pipeline}
+        \emph{Código-fonte} $\rightarrow$ AST $\rightarrow$
+        \emph{Call Graph} $\rightarrow$ \emph{Grafo de Requisitos}.
+        A análise é totalmente estática (não requer execução do
+        código) e o protótipo gera artefactos em três formatos
+        canónicos (PNG, JSON e DOT/Graphviz).
+    \item \code{ranker.py} --- um módulo de análise que aplica
+        PageRank, HITS e SALSA aos grafos produzidos pelo
+        \emph{ReqGraph}, gerando \emph{scores} comparáveis, gráficos
+        de barras e relatórios consolidados. A partir de R5, o
+        \emph{script} \code{compute\_rank\_correlations.py} acrescenta
+        ao \emph{pipeline} o cálculo de Spearman $\rho$ e Kendall
+        $\tau_b$ entre cada par de algoritmos.
+\end{itemize}
+
+A validação foi realizada com \textbf{três projetos reais de código
+aberto} (CPython \emph{stdlib}, Flask e \emph{scikit-learn}),
+selecionados como representantes de regimes crescentes de
+acoplamento arquitetural. Os principais resultados, detalhados no
+Capítulo~\ref{ch:resultados}, sustentam quatro contribuições:
+
+\begin{enumerate}
+    \item \textbf{Validação da qualidade dos rankings extraídos
+        automaticamente.} O \emph{pipeline} \emph{ReqGraph} produziu,
+        sem intervenção humana adicional ao mapeamento
+        \code{func\_to\_req}, grafos de requisitos coerentes com a
+        arquitetura conhecida dos três projetos --- incluindo a
+        deteção emergente do ciclo
+        \req{REQUEST\_HANDLING}$\leftrightarrow$\req{CONTEXT}$\leftrightarrow$\req{ROUTING}$\leftrightarrow$\req{ERROR\_HANDLING}
+        no Flask e da centralidade de \req{REQ\_PIPELINE} no
+        \emph{scikit-learn}. A validação realizada incidiu sobre a
+        \textbf{qualidade dos resultados} (coerência com a
+        arquitetura conhecida), e \emph{não} sobre a sua adequação
+        a perceções de profissionais --- limitação assumida e
+        encaminhada para trabalho futuro
+        (Secção~\ref{sec:trabalho-futuro}).
+
+    \item \textbf{Comparação empírica quantitativa entre PageRank,
+        HITS e SALSA} sobre grafos reais de requisitos, com
+        métricas formais de \emph{rank correlation}. Os resultados
+        (Tabela~\ref{tab:correlacoes}) mostram que a concordância
+        entre algoritmos é \emph{parcial} e \emph{seletiva}: apenas
+        dois dos $18$ pares analisados satisfazem o critério forte
+        de convergência ($\rho \geq 0{,}7$ \emph{e} $\tau_b \geq 0{,}55$),
+        ambos no caso mais esparso (\emph{stdlib}). Esta
+        descoberta \emph{contradiz} a hipótese inicial de que
+        densidade implicaria convergência --- e é, por si só,
+        contribuição empírica relevante. A interpretação adequada é
+        que cada algoritmo capta uma dimensão diferente de
+        centralidade: PageRank capta importância transitiva, HITS
+        \emph{authority} capta dependência direta, HITS \emph{hub}
+        capta orquestração.
+
+    \item \textbf{Implementação manual e documentada do SALSA.}
+        Dado que o NetworkX não fornece SALSA, foi desenvolvida uma
+        implementação completa baseada em matrizes de transição de
+        cadeias de Markov, com tratamento explícito de vértices
+        absorventes. Esta implementação é reaproveitável em
+        contextos académicos e industriais.
+
+    \item \textbf{Mecanismo de redução do custo de mapeamento.} O
+        ficheiro \code{llm\_prompt\_mapping.md} formaliza um
+        \emph{prompt} estruturado para gerar o dicionário
+        \code{func\_to\_req} via modelos de linguagem de grande
+        escala, mitigando uma das fricções identificadas --- a
+        necessidade de mapear manualmente centenas de funções para
+        domínios de requisito.
+\end{enumerate}
+
+\paragraph{Estado dos objetivos e \emph{research questions}.} A
+Tabela~\ref{tab:estado} revisita os objetivos da
+Secção~\ref{sec:objetivos} e identifica o capítulo de resposta a
+cada uma das \emph{research questions}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Estado dos objetivos e das \emph{research questions}.}
+    \label{tab:estado}
+    \begin{tabular}{@{}l l l@{}}
+        \toprule
+        \textbf{Item} & \textbf{Estado} & \textbf{Capítulo / Secção} \\
+        \midrule
+        Objetivo (i) Formalização teórica
+            & Concluído
+            & Capítulo~\ref{ch:fundamentos} \\
+        Objetivo (ii) Protótipo \emph{ReqGraph}
+            & Concluído (\emph{open source})
+            & Capítulo~\ref{ch:metodologia}, Secção~\ref{sec:reqgraph} \\
+        Objetivo (iii) Avaliação empírica
+            & Concluído sobre três casos
+            & Capítulo~\ref{ch:resultados} \\[4pt]
+
+        RQ1 (concordância entre algoritmos)
+            & Respondida quantitativamente
+            & Secção~\ref{sec:res-correlacoes} \\
+        RQ2 (efeito da densidade)
+            & Respondida (\emph{contraintuitiva})
+            & Secção~\ref{sec:res-correlacoes}, \ref{sec:discussao} \\
+        RQ3 (coerência arquitetural)
+            & Respondida qualitativamente
+            & Secção~\ref{sec:discussao} \\[4pt]
+
+        Validação humana dos rankings
+            & Não realizada (limitação)
+            & Trabalho futuro (Secção~\ref{sec:trabalho-futuro}) \\
+        Análise de vulnerabilidades topológicas
+            & Apenas teórica
+            & Capítulo~\ref{ch:fundamentos}, Secção~\ref{sec:salsa} \\
+        Modelo híbrido (vértices artificiais)
+            & Não implementado
+            & Trabalho futuro \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+A consistência entre as conclusões do referencial teórico e os
+resultados experimentais sustenta a tese de que os algoritmos de
+ranqueamento estrutural constituem um \textbf{complemento} --- não
+um substituto --- às técnicas tradicionais de priorização,
+contribuindo para a \textbf{redução, não a eliminação}, do viés
+subjetivo em sistemas de larga escala. A subjetividade é deslocada,
+do julgamento de prioridade por \emph{stakeholder} para a
+construção do mapeamento \code{func\_to\_req}, com vantagens
+operacionais que esta dissertação documenta empiricamente.
+
+% ---------------------------------------------------------------------------
+\section{Trabalho Futuro}
+\label{sec:trabalho-futuro}
+
+A investigação realizada abre várias linhas de continuação,
+ordenadas por proximidade ao trabalho desenvolvido e endereçando
+diretamente as ameaças à validade enunciadas em
+Secção~\ref{sec:ameacas}.
+
+\begin{itemize}
+    \item \textbf{Validação humana dos rankings.} A presente
+        avaliação é estrutural e qualitativa. Um estudo controlado
+        com engenheiros de software --- produzindo rankings manuais
+        sobre os mesmos projetos e comparando-os com os automáticos
+        via correlação de Spearman ou Kendall --- forneceria uma
+        medida quantitativa direta de adequação. Esta validação foi
+        conduzida por \citet{silva2018} para o PageRank
+        isoladamente; a sua replicação para o trio PageRank/HITS/SALSA,
+        alargada a um corpus mais amplo, foi inviabilizada pela
+        limitação de recursos disponível na presente investigação.
+
+    \item \textbf{\emph{Inter-rater reliability} do mapeamento
+        \code{func\_to\_req}.} Replicar o protocolo
+        (Secção~\ref{sec:protocolo-func2req}) com um segundo
+        investigador independente, reportando Cohen's $\kappa$ e
+        analisando o impacto das divergências de mapeamento sobre
+        os rankings finais. Esta extensão endereça diretamente a
+        ameaça à validade interna principal desta dissertação.
+
+    \item \textbf{Modelo Híbrido com Vértices Artificiais.}
+        Implementar a técnica de injeção de prioridades de negócio
+        através de vértices artificiais conectados ao grafo de
+        requisitos \parencite{silva2018}. Esta extensão permitirá
+        medir empiricamente o impacto de prioridades subjetivas
+        sobre os rankings estruturais e oferecer um mecanismo de
+        ajuste fino aos \emph{stakeholders}.
+
+    \item \textbf{Análise de sensibilidade ao $d$ do PageRank.}
+        Sistematizar a robustez dos rankings face a
+        $d \in \{0{,}5,\, 0{,}7,\, 0{,}85,\, 0{,}95\}$ e às
+        tolerâncias de convergência, produzindo gráficos de
+        estabilidade de \emph{rank} por requisito.
+
+    \item \textbf{Análise sobre \emph{codebase} completo.} Reaplicar
+        o \emph{ReqGraph} aos três projetos sem seleção de
+        ficheiros, reduzindo o número de \emph{singletons} e
+        permitindo observar se os rankings dos requisitos
+        atualmente isolados (\eg\ \req{REQ\_BLUEPRINTS},
+        \req{REQ\_TEMPLATING} no Flask) alteram a coerência
+        arquitetural geral.
+
+    \item \textbf{Extensão a outras linguagens.} O motor de
+        extração de \emph{Call Graph} baseia-se exclusivamente no
+        módulo \code{ast} do Python. Estender o \emph{ReqGraph} a
+        Java (via \code{JavaParser}), TypeScript (via TypeScript
+        Compiler API) ou C/C++ (via \code{libclang}) permitiria
+        validar a generalidade da abordagem para além do
+        ecossistema Python.
+
+    \item \textbf{Integração contínua e \emph{snapshots}
+        temporais.} Aplicar o \emph{ReqGraph} a \emph{snapshots}
+        sucessivos do mesmo projeto (\eg\ \emph{tags} de
+        \emph{releases}) permitiria estudar a \textbf{evolução
+        estrutural} dos requisitos ao longo do tempo, detetando
+        \emph{drift} arquitetural e regressões de acoplamento.
+
+    \item \textbf{Tratamento de pesos semânticos.} Atualmente, todas
+        as arestas têm peso unitário. Atribuir pesos derivados da
+        frequência de invocação ou da força do acoplamento
+        (\eg\ número de funções partilhadas entre dois requisitos)
+        poderá refinar substancialmente os rankings.
+\end{itemize}
+
+O conjunto destas linhas confirma que, embora o problema central
+tenha sido endereçado, a abordagem proposta abre um espaço de
+investigação largo no cruzamento entre Engenharia de Requisitos,
+Teoria dos Grafos e Análise Estática de Código.

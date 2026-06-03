@@ -1,0 +1,94 @@
+\chapter{Glossário}
+\label{ch:glossario}
+\addcontentsline{toc}{chapter}{Glossário}
+
+\begin{longtable}{@{}p{0.27\linewidth} p{0.68\linewidth}@{}}
+\toprule
+\textbf{Termo} & \textbf{Definição} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Termo} & \textbf{Definição} \\
+\midrule
+\endhead
+
+AHP & \emph{Analytic Hierarchy Process}. Método de priorização
+proposto por \citet{saaty1980}, baseado em comparações aos pares
+ponderadas por níveis hierárquicos de critérios; tem complexidade
+$O(n^2)$ no número de itens. \\
+
+\emph{AST} (\emph{Abstract Syntax Tree}) & Representação em árvore
+da estrutura sintática de um programa, usada como ponto de partida
+para análise estática de código-fonte. \\
+
+\emph{Call Graph} & Grafo direcionado em que cada vértice é uma
+função (ou método) e cada aresta $(f_i, f_j)$ indica que $f_i$
+invoca $f_j$. \\
+
+Cadeia de Markov & Processo estocástico em que a probabilidade do
+estado seguinte depende apenas do estado atual. Subjacente aos três
+algoritmos analisados nesta dissertação. \\
+
+\emph{Dangling Node} & Vértice sem arestas de saída. No PageRank é
+tratado por redistribuição uniforme da sua massa de probabilidade,
+garantindo ergodicidade da cadeia de Markov. \\
+
+Distribuição estacionária & Vetor probabilístico $\mathbf{r}^{*}$
+que verifica $\mathbf{r}^{*} = M\mathbf{r}^{*}$, isto é, é
+invariante sob aplicação da matriz de transição $M$. Existe e é
+única em cadeias de Markov ergódicas. \\
+
+Efeito TKC & \emph{Tightly Knit Community Effect}: vulnerabilidade
+do HITS em que sub-comunidades densas concentram
+desproporcionalmente os \emph{scores}; o SALSA foi projetado para
+mitigá-lo. \\
+
+Ergodicidade & Propriedade de uma cadeia de Markov que garante a
+existência de uma distribuição estacionária única, independente do
+estado inicial. \\
+
+\emph{Feature module} & Agregação de funções e métodos do código
+relacionada a uma capacidade funcional do sistema; usado nesta
+dissertação como \emph{proxy} para ``requisito''. \\
+
+\emph{Grafo de Requisitos} & Grafo direcionado derivado do
+\emph{Call Graph} através de um mapeamento \code{func\_to\_req}, em
+que cada vértice é um requisito de domínio e as arestas
+representam dependências entre requisitos. \\
+
+\emph{HITS} & Algoritmo de \citet{kleinberg1999} que atribui a cada
+vértice dois \emph{scores}: \emph{hub} (orquestrador) e
+\emph{authority} (dependência central). \\
+
+\emph{PageRank} & Algoritmo de ranqueamento que modela a
+probabilidade estacionária de um navegador aleatório visitar cada
+vértice do grafo \parencite{page1999, brin1998}. \\
+
+Kendall $\tau_b$ & Coeficiente de correlação de ranks baseado em
+pares concordantes e discordantes, com correção para empates
+\parencite{kendall1938, goodman1954}. Toma valores em $[-1, 1]$. \\
+
+\emph{Rank Correlation} & Medida da semelhança entre duas
+ordenações; nesta dissertação é utilizada para comparar rankings
+produzidos por diferentes algoritmos. \\
+
+\emph{Random Walk} & Processo estocástico que descreve a
+trajetória de um caminhante que se move aleatoriamente entre
+vértices de um grafo, seguindo probabilidades associadas às
+arestas. \\
+
+\emph{SALSA} & Algoritmo de \citet{lempel2001} que combina HITS
+com cadeias de Markov sobre um grafo bipartido, normalizando
+localmente por grau. \\
+
+Spearman $\rho$ & Coeficiente de correlação de Pearson aplicado a
+ranks; mede a força e direção da relação monotónica entre duas
+ordenações \parencite{spearman1904}. Toma valores em $[-1, 1]$. \\
+
+\emph{Threats to validity} & Conjunto de ameaças à
+generalização e à interpretação de um estudo empírico, organizadas
+por \citet{wohlin2012} em quatro categorias:
+\emph{construct}, \emph{internal}, \emph{external}, \emph{conclusion}. \\
+
+\bottomrule
+\end{longtable}

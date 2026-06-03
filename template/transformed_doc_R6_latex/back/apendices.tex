@@ -90,3 +90,159 @@ Secção~\ref{sec:contribuicoes}. Cada ficheiro contém um único
 dicionário Python \code{FUNC\_TO\_REQ} cujas chaves são nomes
 qualificados de funções/métodos e cujos valores são identificadores
 de requisitos no formato \texttt{REQ\_*}.
+
+% ============================================================================
+\chapter{Representações Visuais do Call Graph}
+\label{ap:callgraph-repr}
+
+Este apêndice complementa a Figura~\ref{fig:call-graph-stdlib}
+(Capítulo~\ref{ch:metodologia}) apresentando, para cada um dos três
+casos de estudo, o \emph{Call Graph} extraído por análise estática
+(Secção~\ref{sec:reqgraph}) em \textbf{três representações
+complementares}. A motivação é metodológica: um único \emph{Call
+Graph} real combina centenas de vértices com nomes longos de
+funções/métodos, pelo que nenhuma representação isolada consegue, em
+simultâneo, documentar a \emph{escala} do grafo e manter os
+\emph{rótulos legíveis}. As três vistas resolvem este compromisso de
+formas distintas:
+
+\begin{description}
+    \item[(i) Grafo completo.] Mostra \emph{todos} os vértices e
+        arestas, dispostos por camadas hierárquicas (funções
+        ``fonte'' no topo; folhas em baixo). Documenta fielmente a
+        \textbf{escala e a densidade} reais do grafo. Os nomes estão
+        rotulados em todos os vértices, mas, dada a dimensão, servem
+        sobretudo de referência de conjunto --- não se destinam a
+        leitura individual.
+    \item[(ii) Maior componente conexa.] Isola a maior
+        \emph{componente fracamente conexa} do grafo, eliminando os
+        sub-sistemas periféricos e os vértices isolados. Revela a
+        \textbf{estrutura principal} de invocações com rótulos já
+        substancialmente mais legíveis.
+    \item[(iii) Excerto representativo.] Um excerto conexo de
+        $\sim\!10$ vértices, selecionado de forma determinística a
+        partir do vértice de maior grau da maior componente
+        (expansão em largura). Apresentado no estilo limpo dos grafos
+        do Capítulo~\ref{ch:fundamentos} --- setas escuras e
+        proeminentes que terminam na borda do nó ---, é a vista
+        \textbf{totalmente legível}, adequada à inspeção dos nomes
+        das funções/métodos em cada aresta.
+\end{description}
+
+As três figuras de cada caso foram geradas pelo \emph{script}
+reprodutível \code{scripts/gen\_callgraph\_figures.py}, que reaplica
+o extrator de \emph{Call Graph} (\code{reqgraph.call\_graph}) sobre os
+ficheiros de cada caso de estudo. A cor de cada vértice identifica o
+\emph{módulo} (ficheiro \code{.py}) de origem da função.
+
+% ----------------------------------------------------------------------------
+\section{Caso Simples --- CPython \emph{stdlib}}
+\label{ap:cg-stdlib}
+
+O \emph{Call Graph} do caso \emph{stdlib} (\code{argparse.py} +
+\code{http/server.py}) tem $120$ vértices e $130$ arestas, repartidos
+por vários sub-sistemas independentes --- coerente com o baixo
+acoplamento esperado da biblioteca padrão. A
+Figura~\ref{fig:cg-stdlib-full} evidencia esta dispersão em camadas; a
+maior componente (Figura~\ref{fig:cg-stdlib-comp}) corresponde ao
+\emph{core} de \emph{parsing} do \code{argparse}; o excerto
+(Figura~\ref{fig:cg-stdlib-exc}) centra-se em
+\code{ArgumentParser.\_parse\_known\_args}, o método que orquestra a
+análise de argumentos.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{call_graph_simples_stdlib_full.png}
+    \caption{CPython \emph{stdlib} --- \emph{Call Graph} completo
+    ($120$ vértices, $130$ arestas).}
+    \label{fig:cg-stdlib-full}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\linewidth]{call_graph_simples_stdlib_componente.png}
+    \caption{CPython \emph{stdlib} --- maior componente conexa.}
+    \label{fig:cg-stdlib-comp}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{call_graph_simples_stdlib_excerto.png}
+    \caption{CPython \emph{stdlib} --- excerto representativo, no
+    estilo do Capítulo~\ref{ch:fundamentos}.}
+    \label{fig:cg-stdlib-exc}
+\end{figure}
+
+\clearpage
+% ----------------------------------------------------------------------------
+\section{Caso Intermediário --- Flask}
+\label{ap:cg-flask}
+
+O \emph{Call Graph} do Flask (\code{app.py}, \code{cli.py},
+\code{blueprints.py}) tem $49$ vértices e $47$ arestas. A maior
+componente (Figura~\ref{fig:cg-flask-comp}) converge para
+\code{Flask.ensure\_sync} e para o ciclo de vida da requisição; o
+excerto (Figura~\ref{fig:cg-flask-exc}) torna explícito o padrão em
+estrela em torno de \code{Flask.ensure\_sync}, refletindo o seu papel
+de ponto de convergência do \emph{middleware}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{call_graph_medio_flask_full.png}
+    \caption{Flask --- \emph{Call Graph} completo ($49$ vértices,
+    $47$ arestas).}
+    \label{fig:cg-flask-full}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\linewidth]{call_graph_medio_flask_componente.png}
+    \caption{Flask --- maior componente conexa.}
+    \label{fig:cg-flask-comp}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{call_graph_medio_flask_excerto.png}
+    \caption{Flask --- excerto representativo, no estilo do
+    Capítulo~\ref{ch:fundamentos}.}
+    \label{fig:cg-flask-exc}
+\end{figure}
+
+\clearpage
+% ----------------------------------------------------------------------------
+\section{Caso Complexo --- \emph{scikit-learn}}
+\label{ap:cg-sklearn}
+
+O \emph{Call Graph} do \emph{scikit-learn} (\code{pipeline.py},
+\code{linear\_model/\_base.py}, \code{linear\_model/\_logistic.py},
+\code{tree/\_classes.py}) tem $74$ vértices e $80$ arestas. A maior
+componente (Figura~\ref{fig:cg-sklearn-comp}) e o excerto
+(Figura~\ref{fig:cg-sklearn-exc}) confirmam o papel central de
+\code{Pipeline.\_iter} e dos métodos \code{fit}/\code{predict} como
+orquestradores --- a contraparte, ao nível das funções, da
+centralidade de \req{REQ\_PIPELINE} observada no Grafo de Requisitos
+(Secção~\ref{sec:res-sklearn}).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{call_graph_complexo_sklearn_full.png}
+    \caption{\emph{scikit-learn} --- \emph{Call Graph} completo
+    ($74$ vértices, $80$ arestas).}
+    \label{fig:cg-sklearn-full}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\linewidth]{call_graph_complexo_sklearn_componente.png}
+    \caption{\emph{scikit-learn} --- maior componente conexa.}
+    \label{fig:cg-sklearn-comp}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{call_graph_complexo_sklearn_excerto.png}
+    \caption{\emph{scikit-learn} --- excerto representativo, no estilo
+    do Capítulo~\ref{ch:fundamentos}.}
+    \label{fig:cg-sklearn-exc}
+\end{figure}

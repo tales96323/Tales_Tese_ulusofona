@@ -162,13 +162,13 @@ estas quatro responsabilidades estão estreitamente acopladas, o que
 ciclo de vida de uma requisição obriga à coordenação entre
 \emph{dispatcher}, contexto de aplicação e tratamento de exceções.
 
-Na Figura~\ref{fig:req-flask}, \textbf{as cores atribuídas aos
-vértices identificam o ficheiro-fonte do projeto a que cada
-requisito pertence} (azul para \code{app.py}, verde para
-\code{cli.py}, laranja para \code{blueprints.py}), permitindo
-perceber visualmente como o acoplamento atravessa os módulos. As
-cores das arestas seguem a cor do vértice de origem, facilitando a
-leitura das cadeias de dependência.
+A Figura~\ref{fig:req-flask} adota a mesma convenção visual dos
+grafos direcionados do Capítulo~\ref{ch:fundamentos}: cada vértice
+é identificado pelo respetivo rótulo \texttt{REQ\_*} e as arestas
+usam setas escuras e proeminentes que terminam na borda de cada nó,
+com curvatura que separa os pares recíprocos. Esta uniformização
+torna o ciclo central imediatamente visível e facilita a leitura das
+cadeias de dependência que atravessam os módulos.
 
 \begin{figure}[ht]
     \centering
@@ -247,6 +247,7 @@ o critério do algoritmo.
     \caption{\emph{Top-3} por algoritmo: CPython \emph{stdlib}.}
     \label{tab:top3-stdlib}
     \footnotesize
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{@{}l l l l@{}}
         \toprule
         \textbf{Algoritmo} & \textbf{1.º} & \textbf{2.º} & \textbf{3.º} \\
@@ -257,7 +258,8 @@ o critério do algoritmo.
         \textbf{SALSA --- Authority}   & \req{REQ\_HTTP\_CONTENT} ($0{,}167$)   & \req{REQ\_HTTP\_LOGGING} ($0{,}167$) & \req{REQ\_ERROR\_HANDLING} ($0{,}167$) \\
         \textbf{SALSA --- Hub}         & \req{REQ\_HTTP\_HANDLER} ($0{,}200$)   & \req{REQ\_ERROR\_HANDLING} ($0{,}200$) & \req{REQ\_ACTIONS} ($0{,}200$) \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 O PageRank identifica \req{REQ\_ERROR\_HANDLING} como o requisito
@@ -302,6 +304,7 @@ zero (não contam para o top).
     \caption{\emph{Top-3} por algoritmo: Flask.}
     \label{tab:top3-flask}
     \footnotesize
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{@{}l l l l@{}}
         \toprule
         \textbf{Algoritmo} & \textbf{1.º} & \textbf{2.º} & \textbf{3.º} \\
@@ -312,7 +315,8 @@ zero (não contam para o top).
         \textbf{SALSA --- Authority}   & \multicolumn{3}{c}{\emph{uniforme} a $0{,}167$ entre 6 requisitos com arestas} \\
         \textbf{SALSA --- Hub}         & \multicolumn{3}{c}{\emph{uniforme} a $0{,}167$ entre 6 requisitos com arestas} \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 \req{REQ\_REQUEST\_HANDLING} emerge como o vértice central segundo o
@@ -347,6 +351,7 @@ mais complexo.
     \caption{\emph{Top-3} por algoritmo: \emph{scikit-learn}.}
     \label{tab:top3-sklearn}
     \footnotesize
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{@{}l l l l@{}}
         \toprule
         \textbf{Algoritmo} & \textbf{1.º} & \textbf{2.º} & \textbf{3.º} \\
@@ -357,7 +362,8 @@ mais complexo.
         \textbf{SALSA --- Authority}   & \multicolumn{3}{c}{\emph{uniforme} a $0{,}143$ entre 7 requisitos com arestas} \\
         \textbf{SALSA --- Hub}         & \multicolumn{3}{c}{\emph{uniforme} a $0{,}143$ entre 7 requisitos com arestas} \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
 
 PageRank e HITS coincidem na identificação de \req{REQ\_PIPELINE}

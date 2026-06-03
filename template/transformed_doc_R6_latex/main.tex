@@ -84,8 +84,15 @@
 % ============================================================================
 %  BACK MATTER (Glossário, Apêndices, Anexos)
 % ============================================================================
-\appendix
+% Glossário: capítulo não numerado do back matter.
 \include{back/glossario}
+
+% Apêndices: numerados com letras (A, B, C, ...). É necessário reativar a
+% numeração de cabeçalhos (desligada por \backmatter) antes de \appendix,
+% para que as referências \ref{ap:...} produzam "A", "B", ... em vez de
+% herdarem o último contador numérico do corpo principal.
+\makeatletter\@mainmattertrue\makeatother
+\appendix
 \include{back/apendices}
 
 \end{document}

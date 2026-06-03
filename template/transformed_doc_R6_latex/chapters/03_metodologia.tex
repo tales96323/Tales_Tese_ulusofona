@@ -119,13 +119,24 @@ analítico é composto por quatro estágios sequenciais:
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.85\linewidth]{call_graph_simples_stdlib.png}
-    \caption{\emph{Call Graph} extraído via AST do CPython
-    \emph{stdlib} (\code{argparse} + \code{http.server}). Cada vértice
-    é uma função ou método; cada aresta $(f_i, f_j)$ indica que $f_i$
-    invoca $f_j$.}
+    \includegraphics[width=0.92\linewidth]{call_graph_simples_stdlib_excerto.png}
+    \caption{Excerto representativo do \emph{Call Graph} extraído via
+    AST do CPython \emph{stdlib} (\code{argparse}). Cada vértice é uma
+    função ou método --- e o seu nome está rotulado no vértice ---,
+    enquanto cada aresta $(f_i, f_j)$ indica que $f_i$ invoca $f_j$. As
+    setas escuras terminam na borda do nó, em coerência com a
+    convenção visual dos grafos do Capítulo~\ref{ch:fundamentos}.}
     \label{fig:call-graph-stdlib}
 \end{figure}
+
+Por legibilidade, a Figura~\ref{fig:call-graph-stdlib} apresenta apenas
+um \emph{excerto} do \emph{Call Graph} do caso \emph{stdlib} (o grafo
+completo tem $120$ vértices e $130$ arestas). De modo a documentar a
+escala real de cada caso de estudo sem sacrificar a legibilidade dos
+nomes, o \emph{Call Graph} dos três projetos é apresentado, no
+Apêndice~\ref{ap:callgraph-repr}, em três representações
+complementares: (i) o grafo completo rotulado; (ii) a sua maior
+componente conexa; e (iii) um excerto representativo.
 
 O código-fonte completo do \emph{ReqGraph}, incluindo o módulo
 \code{ranker.py} descrito na Secção~\ref{sec:tecnologia}, está
